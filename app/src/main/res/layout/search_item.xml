@@ -1,0 +1,64 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:background="?attr/selectableItemBackground"
+    android:paddingStart="16dp"
+    android:paddingEnd="16dp">
+
+    <ImageView
+        android:id="@+id/image"
+        android:layout_width="160dp"
+        android:layout_height="0dp"
+        android:background="#313131"
+        android:layout_marginTop="8dp"
+        android:layout_marginBottom="8dp"
+        app:layout_constraintDimensionRatio="16:9"
+        app:layout_constraintTop_toTopOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintBottom_toBottomOf="parent"/>
+
+    <TextView
+        android:id="@+id/title"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        tools:text="Google Duplex: A.I. Assistant Calls Local Bussinesses To Make Applications"
+        android:textColor="@android:color/white"
+        android:textSize="14sp"
+        android:padding="@dimen/dp_4"
+        android:maxLines="3"
+        android:ellipsize="end"
+        android:textAlignment="viewStart"
+        android:includeFontPadding="false"
+        android:layout_marginStart="16dp"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@id/image"
+        app:layout_constraintTop_toTopOf="@id/image" />
+
+    <TextView
+        android:id="@+id/channelName"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        tools:text="Jeffrey Grubb"
+        android:textSize="12sp"
+        android:includeFontPadding="false"
+        android:layout_marginTop="2dp"
+        app:layout_constraintStart_toStartOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/title" />
+
+    <TextView
+        android:id="@+id/time"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="8dp"
+        android:textSize="12sp"
+        android:includeFontPadding="false"
+        tools:text="1 year ago . 178k views"
+        android:textColor="@android:color/darker_gray"
+        app:layout_constraintStart_toStartOf="@id/title"
+        app:layout_constraintTop_toBottomOf="@id/channelName" />
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

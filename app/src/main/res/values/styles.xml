@@ -1,0 +1,23 @@
+<resources>
+
+    <!-- Base application theme. -->
+    <style name="AppTheme" parent="Theme.MaterialComponents.NoActionBar">
+        <!-- Customize your theme here. -->
+        <item name="colorPrimary">@color/colorPrimary</item>
+        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorAccent">@color/colorAccent</item>
+    </style>
+
+    <style name="Fullscreen" parent="AppTheme">
+        <item name="android:windowFullscreen">true</item>
+    </style>
+
+    <style name="Splash" parent="Fullscreen">
+        <item name="android:windowFullscreen">true</item>
+        <item name="android:background">@drawable/launch</item>
+    </style>
+
+    <style name="Theme.CastVideosDark" parent="Theme.AppCompat.NoActionBar">
+        <item name="colorPrimaryDark">@android:color/black</item>
+    </style>
+</resources>

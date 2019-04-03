@@ -1,14 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    package="com.galaxycast.app">
+    package="com.castgalaxy.app">
 
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
-        android:name=".GalaxyCastApplication"
+        android:name="com.castgalaxy.app.GalaxyCastApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -17,7 +17,7 @@
         android:theme="@style/AppTheme"
         tools:ignore="GoogleAppIndexingWarning">
         <activity
-            android:name=".SplashActivity"
+            android:name="com.castgalaxy.app.SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Splash">
             <intent-filter>
@@ -27,22 +27,22 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.galaxycast.app.ui.login.ActivationActivity"
+            android:name="com.castgalaxy.app.ui.login.ActivationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Fullscreen" />
         <activity
-            android:name="com.galaxycast.app.ui.search.SearchActivity"
+            android:name="com.castgalaxy.app.ui.search.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.galaxycast.app.ui.login.CheckActivity"
+            android:name="com.castgalaxy.app.ui.login.CheckActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.galaxycast.app.ui.player.PlayerActivity"
+            android:name="com.castgalaxy.app.ui.player.PlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Fullscreen" />
 
         <activity
-            android:name="com.galaxycast.app.ui.expandedcontrols.ExpandedControlsActivity"
+            android:name="com.castgalaxy.app.ui.expandedcontrols.ExpandedControlsActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -52,12 +52,12 @@
             </intent-filter>
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.galaxycast.app.ui.search.SearchActivity" />
+                android:value="com.castgalaxy.app.ui.search.SearchActivity" />
         </activity>
 
         <meta-data
             android:name="com.google.android.gms.cast.framework.OPTIONS_PROVIDER_CLASS_NAME"
-            android:value="com.galaxycast.app.utily.CastOptionsProvider" />
+            android:value="com.castgalaxy.app.utily.CastOptionsProvider" />
     </application>
 
 </manifest>

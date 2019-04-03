@@ -20,4 +20,8 @@
     <style name="Theme.CastVideosDark" parent="Theme.AppCompat.NoActionBar">
         <item name="colorPrimaryDark">@android:color/black</item>
     </style>
+
+    <style name="MyDialogTheme" parent="Theme.AppCompat.Light.Dialog.Alert">
+
+    </style>
 </resources>

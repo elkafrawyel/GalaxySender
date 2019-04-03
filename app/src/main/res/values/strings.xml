@@ -1,11 +1,12 @@
-<resources>
-    <string name="app_name">GalaxyCast</string>
-    <string name="waiting_for_your_search">Waiting for your search</string>
-    <string name="activation_code">Activation Code</string>
-    <string name="activate">Activate</string>
-    <string name="app_id">21B5D797</string>
-    <string name="media_route_menu_title">Play on&#8230;</string>
-    <string name="action_settings">Settings</string>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">GalaxyCast</string>
+    <string name="waiting_for_your_search" tools:ignore="MissingTranslation">Waiting for your search</string>
+    <string name="activation_code" tools:ignore="MissingTranslation">Activation Code</string>
+    <string name="activate" tools:ignore="MissingTranslation">Activate</string>
+    <string name="app_id" tools:ignore="MissingTranslation">21B5D797</string>
+    <string name="media_route_menu_title" tools:ignore="MissingTranslation">Play on&#8230;</string>
+    <string name="action_settings" tools:ignore="MissingTranslation">Settings</string>
+    <string name="player_video_quality" tools:ignore="MissingTranslation">Quality</string>
     <!--F8625674? ower appId-->
     <!--B87E66CB? ower appId-->
     <!--4F8B3483? defaut appId-->

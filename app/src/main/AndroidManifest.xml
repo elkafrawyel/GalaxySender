@@ -8,16 +8,18 @@
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
 
     <application
-        android:name="com.castgalaxy.app.GalaxyCastApplication"
+        android:name=".GalaxyCastApplication"
         android:allowBackup="true"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
-        tools:ignore="GoogleAppIndexingWarning">
+        tools:ignore="GoogleAppIndexingWarning"
+        android:usesCleartextTraffic="true">
+        <activity android:name=".ui.playList.PlayListActivity"/>
         <activity
-            android:name="com.castgalaxy.app.SplashActivity"
+            android:name=".SplashActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Splash">
             <intent-filter>
@@ -27,22 +29,21 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="com.castgalaxy.app.ui.login.ActivationActivity"
+            android:name=".ui.login.ActivationActivity"
             android:screenOrientation="portrait"
             android:theme="@style/Fullscreen" />
         <activity
-            android:name="com.castgalaxy.app.ui.search.SearchActivity"
+            android:name=".ui.search.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.castgalaxy.app.ui.login.CheckActivity"
+            android:name=".ui.login.CheckActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name="com.castgalaxy.app.ui.player.PlayerActivity"
+            android:name=".ui.player.PlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Fullscreen" />
-
         <activity
-            android:name="com.castgalaxy.app.ui.expandedcontrols.ExpandedControlsActivity"
+            android:name=".ui.expandedcontrols.ExpandedControlsActivity"
             android:label="@string/app_name"
             android:launchMode="singleTask"
             android:screenOrientation="portrait"
@@ -50,6 +51,7 @@
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
             </intent-filter>
+
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
                 android:value="com.castgalaxy.app.ui.search.SearchActivity" />

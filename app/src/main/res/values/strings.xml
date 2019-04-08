@@ -7,6 +7,13 @@
     <string name="media_route_menu_title" tools:ignore="MissingTranslation">Play on&#8230;</string>
     <string name="action_settings" tools:ignore="MissingTranslation">Settings</string>
     <string name="player_video_quality" tools:ignore="MissingTranslation">Quality</string>
+    <string name="search_hint" tools:ignore="MissingTranslation">Search YouTube</string>
+    <string name="playlist" tools:ignore="MissingTranslation">Playlist</string>
+    <string name="addLink" tools:ignore="MissingTranslation">Add Url</string>
+    <string name="cancel" tools:ignore="MissingTranslation">Cancel</string>
+    <string name="play">Play</string>
+    <string name="addToPlaylist">Add to playlist</string>
+    <string name="removeFromPlayList">Remove</string>
     <!--F8625674? ower appId-->
     <!--B87E66CB? ower appId-->
     <!--4F8B3483? defaut appId-->

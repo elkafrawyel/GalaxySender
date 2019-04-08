@@ -1,0 +1,68 @@
+{
+  "_note1": "KEEP THIS FILE! Check it into a version control system (VCS) like git.",
+  "_note2": "ObjectBox manages crucial IDs for your object model. See docs for details.",
+  "_note3": "If you have VCS merge conflicts, you must resolve them according to ObjectBox docs.",
+  "entities": [
+    {
+      "id": "1:5425447642820353006",
+      "lastPropertyId": "2:7100732797909136351",
+      "name": "SearchQueries",
+      "properties": [
+        {
+          "id": "1:4450169977549261600",
+          "name": "id"
+        },
+        {
+          "id": "2:7100732797909136351",
+          "name": "text"
+        }
+      ],
+      "relations": []
+    },
+    {
+      "id": "2:2471557439963546273",
+      "lastPropertyId": "6:8809432236580447785",
+      "name": "MyVideos",
+      "properties": [
+        {
+          "id": "1:5085689934794897882",
+          "name": "id"
+        },
+        {
+          "id": "2:8447763551746513538",
+          "name": "videoId"
+        },
+        {
+          "id": "3:4081238184702165047",
+          "name": "title"
+        },
+        {
+          "id": "4:5973052950076510555",
+          "name": "channelName"
+        },
+        {
+          "id": "5:2023251791681123241",
+          "name": "time"
+        },
+        {
+          "id": "6:8809432236580447785",
+          "name": "image"
+        }
+      ],
+      "relations": []
+    }
+  ],
+  "lastEntityId": "2:2471557439963546273",
+  "lastIndexId": "1:3972021471291561533",
+  "lastRelationId": "0:0",
+  "lastSequenceId": "0:0",
+  "modelVersion": 4,
+  "modelVersionParserMinimum": 4,
+  "retiredEntityUids": [],
+  "retiredIndexUids": [
+    3972021471291561533
+  ],
+  "retiredPropertyUids": [],
+  "retiredRelationUids": [],
+  "version": 1
+}

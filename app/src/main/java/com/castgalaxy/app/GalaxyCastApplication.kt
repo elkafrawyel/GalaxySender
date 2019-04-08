@@ -3,6 +3,7 @@ package com.castgalaxy.app
 import android.app.Application
 import com.blankj.utilcode.util.Utils
 import com.castgalaxy.app.remote.RetrofitService
+import com.castgalaxy.app.utily.ObjectBox
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTubeScopes
@@ -19,6 +20,7 @@ class GalaxyCastApplication : Application() {
         super.onCreate()
         instance = this
         Utils.init(this)
+        ObjectBox.init(this)
     }
 
     companion object {

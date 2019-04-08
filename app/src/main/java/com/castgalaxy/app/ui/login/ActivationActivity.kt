@@ -28,13 +28,13 @@ class ActivationActivity : AppCompatActivity() {
         logo.startAnimation(rotate)
 
         activationMbtn.setOnClickListener {
-            if (activeCode.text.toString().isNotEmpty() && activeCode.text.toString().equals("hmaserv123")) {
+//            if (activeCode.text.toString().isNotEmpty() && activeCode.text.toString().equals("hmaserv123")) {
                 val intent = Intent(this, CheckActivity::class.java)
                 startActivity(intent)
                 finish()
-            }else{
-                Toast.makeText(this,"Invalid Code",Toast.LENGTH_LONG).show()
-            }
+//            }else{
+//                Toast.makeText(this,"Invalid Code",Toast.LENGTH_LONG).show()
+//            }
         }
     }
 }

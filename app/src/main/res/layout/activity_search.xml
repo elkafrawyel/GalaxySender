@@ -25,6 +25,7 @@
         app:layout_constraintTop_toBottomOf="@id/toolbar"
         app:queryHint="Search" />
 
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/searchRv"
         android:layout_width="0dp"
@@ -73,13 +74,37 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="8dp"
-        android:visibility="visible"
         android:text="@string/waiting_for_your_search"
         android:textAppearance="?attr/textAppearanceBody1"
         android:textColor="@android:color/darker_gray"
+        android:visibility="visible"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/waitView" />
+
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/queriesRv"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="4dp"
+        android:visibility="gone"
+        android:background="@drawable/rounded"
+        app:layout_constraintEnd_toEndOf="@id/searchView"
+        app:layout_constraintStart_toStartOf="@id/searchView"
+        app:layout_constraintTop_toBottomOf="@id/searchView"
+        android:padding="8dp"/>
+
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fabBtn"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        android:layout_margin="36dp"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:tint="@android:color/white"
+        app:backgroundTint="@color/colorPrimaryDark"
+        app:rippleColor="@color/colorPrimary" />
 
     <fragment
         android:id="@+id/castMiniController"

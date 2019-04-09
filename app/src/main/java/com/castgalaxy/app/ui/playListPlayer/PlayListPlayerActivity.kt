@@ -122,14 +122,14 @@ class PlayListPlayerActivity : AppCompatActivity(), Player.EventListener, VideoL
         audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
         videoId = intent.getStringExtra("videoId")
-        viewModel.getVideo(videoId)
+        viewModel.getVideo(videoId, PlayerActivity.VideoType.VIDEO)
 
         retry.setOnClickListener { retry() }
 
     }
 
     private fun retry() {
-        viewModel.getVideo(videoId)
+        viewModel.getVideo(videoId, PlayerActivity.VideoType.VIDEO)
     }
 
     private fun onVideoResponse(resource: PlayerViewModel.VideoState?) {
@@ -591,7 +591,7 @@ class PlayListPlayerActivity : AppCompatActivity(), Player.EventListener, VideoL
         if (index == allVideos.size - 1) index = 0 else index++
         val newVideo = allVideos[index]
         videoId = newVideo.videoId
-        viewModel.getVideo(videoId)
+        viewModel.getVideo(videoId, PlayerActivity.VideoType.VIDEO)
     }
 
     override fun onRepeatModeChanged(repeatMode: Int) {

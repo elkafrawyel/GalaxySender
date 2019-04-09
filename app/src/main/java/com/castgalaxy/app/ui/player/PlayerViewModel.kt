@@ -19,13 +19,13 @@ class PlayerViewModel() : ViewModel() {
     private val videoMutableLiveData = MutableLiveData<VideoState>()
     val videoLiveData: LiveData<VideoState> = videoMutableLiveData
 
-    val videoUseCase = GetVideoUseCase(GalaxyCastApplication.retrofitService())
+    private val videoUseCase = GetVideoUseCase(GalaxyCastApplication.retrofitService())
 
-    fun getVideo(videoId: String) {
-        launchGetVideoJob(videoId)
+    fun getVideo(id_or_url: String, type: PlayerActivity.VideoType) {
+        launchGetVideoJob(id_or_url, type)
     }
 
-    private fun launchGetVideoJob(videoId: String) {
+    private fun launchGetVideoJob(id_or_url: String, type: PlayerActivity.VideoType) {
         if (videoJob?.isActive == true) {
             return
         } else if (!isDeviceOnline()) {
@@ -35,7 +35,7 @@ class PlayerViewModel() : ViewModel() {
                 withContext(Dispatchers.Main) {
                     videoMutableLiveData.value = VideoState.Loading
                 }
-                val result = videoUseCase.getVideo(videoId)
+                val result = videoUseCase.getVideo(id_or_url,type)
                 withContext(Dispatchers.Main) {
                     when (result) {
 

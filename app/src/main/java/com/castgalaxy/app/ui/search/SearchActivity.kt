@@ -69,7 +69,7 @@ class SearchActivity : AppCompatActivity() {
 
         searchRv.adapter = adapter
 
-        if(!searchView.isFocused) {
+        if (!searchView.isFocused) {
             searchView.clearFocus();
         }
 
@@ -140,7 +140,7 @@ class SearchActivity : AppCompatActivity() {
 
             videoOptionsView.findViewById<TextView>(R.id.playVideoTv).setOnClickListener {
                 dialog.dismiss()
-                PlayerActivity.start(this, searchResult.id.videoId)
+                PlayerActivity.start(this, searchResult.id.videoId, null)
             }
 
             videoOptionsView.findViewById<TextView>(R.id.addToPlayListTv).setOnClickListener {
@@ -205,7 +205,6 @@ class SearchActivity : AppCompatActivity() {
         val dialog = AlertDialog.Builder(this)
             .setView(input)
             .setTitle("Add Url")
-//            .setMessage("Add a media url to play")
             .setIcon(R.drawable.logo)
             .setCancelable(true)
             .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
@@ -218,7 +217,8 @@ class SearchActivity : AppCompatActivity() {
                 val link = input.text.toString()
 
                 if (link.isNotEmpty()) {
-
+                    PlayerActivity.start(this, null, link)
+                    dialog.dismiss()
                 } else {
                     input.error = "Empty Url Not Allowed"
                 }

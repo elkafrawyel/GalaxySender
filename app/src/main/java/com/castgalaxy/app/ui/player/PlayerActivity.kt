@@ -16,12 +16,8 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.castgalaxy.app.R
-import com.castgalaxy.app.entity.MyVideos
-import com.castgalaxy.app.entity.MyVideos_
 import com.castgalaxy.app.entity.Video
 import com.castgalaxy.app.ui.expandedcontrols.ExpandedControlsActivity
-import com.castgalaxy.app.utily.ObjectBox
-import com.castgalaxy.app.utily.ObjectBox.Companion.boxStore
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory
@@ -45,6 +41,9 @@ import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.google.android.gms.common.images.WebImage
 import kotlinx.android.synthetic.main.activity_player.*
 
+private const val VIDEO = "videoId"
+private const val URL = "url"
+
 class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener {
 
     private val TAG = "GalaxyCast"
@@ -55,7 +54,8 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     private var mLocation: PlaybackLocation? = null
     private var mCastSession: CastSession? = null
     private var mSessionManagerListener: SessionManagerListener<CastSession>? = null
-    private var videoId: String = ""
+    private var videoId: String? = null
+    private var url: String? = null
     private var videoUrl: String? = null
     private var video: Video? = null
     //       "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/Sintel.mp4"
@@ -74,10 +74,19 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         REMOTE
     }
 
+    enum class VideoType {
+        VIDEO,
+        URL
+    }
+
     companion object {
-        fun start(context: Context, videoId: String) {
+        fun start(context: Context, videoId: String?, url: String?) {
             val intent = Intent(context, PlayerActivity::class.java)
-            intent.putExtra("videoId", videoId)
+            if (videoId != null) {
+                intent.putExtra(VIDEO, videoId)
+            } else {
+                intent.putExtra(URL, url)
+            }
             context.startActivity(intent)
         }
     }
@@ -117,15 +126,31 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
         audioManager = applicationContext.getSystemService(Context.AUDIO_SERVICE) as AudioManager
 
-        videoId = intent.getStringExtra("videoId")
-        viewModel.getVideo(videoId)
+        videoId = intent.getStringExtra(VIDEO)
+        url = intent.getStringExtra(URL)
 
-        retry.setOnClickListener { Retry() }
+        when {
+            videoId != null -> viewModel.getVideo(videoId!!, VideoType.VIDEO)
+            url != null -> viewModel.getVideo(url!!, VideoType.URL)
+            else -> {
+
+            }
+        }
+
+
+        retry.setOnClickListener { retry() }
 
     }
 
-    private fun Retry() {
-        viewModel.getVideo(videoId)
+    private fun retry() {
+        if (videoId != null) {
+            viewModel.getVideo(videoId!!,VideoType.VIDEO)
+        } else if (url != null) {
+            viewModel.getVideo(url!!,VideoType.URL)
+        } else {
+
+        }
+
     }
 
     private fun onVideoResponse(resource: PlayerViewModel.VideoState?) {

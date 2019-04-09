@@ -12,6 +12,7 @@ import com.google.android.gms.cast.framework.media.NotificationOptions
 
 class CastOptionsProvider : OptionsProvider {
 
+    //change this class path from manifests
     override fun getCastOptions(context: Context): CastOptions {
 
         val notificationOptions = NotificationOptions.Builder()

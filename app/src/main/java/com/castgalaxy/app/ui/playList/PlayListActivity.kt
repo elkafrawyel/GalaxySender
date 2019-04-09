@@ -11,6 +11,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.castgalaxy.app.R
 import com.castgalaxy.app.entity.MyVideos
+import com.castgalaxy.app.ui.playListPlayer.PlayListPlayerActivity
 import com.castgalaxy.app.ui.player.PlayerActivity
 import com.castgalaxy.app.ui.search.MyVideosAdapter
 import com.castgalaxy.app.utily.ObjectBox.Companion.boxStore
@@ -55,7 +56,7 @@ class PlayListActivity : AppCompatActivity() {
 
             myVideoOptionsView.findViewById<TextView>(R.id.playVideoTv).setOnClickListener {
                 dialog.dismiss()
-                PlayerActivity.start(this, myVideos.videoId.toString())
+                PlayListPlayerActivity.start(this, myVideos.videoId)
             }
 
             myVideoOptionsView.findViewById<TextView>(R.id.removeFromPlayListTv).setOnClickListener {

@@ -1,9 +1,10 @@
-package com.castgalaxy.app.ui.player
+package com.castgalaxy.app.ui.playListPlayer
 
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.net.Uri
+import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
@@ -12,7 +13,6 @@ import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.app.AlertDialog
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import com.castgalaxy.app.R
@@ -20,9 +20,11 @@ import com.castgalaxy.app.entity.MyVideos
 import com.castgalaxy.app.entity.MyVideos_
 import com.castgalaxy.app.entity.Video
 import com.castgalaxy.app.ui.expandedcontrols.ExpandedControlsActivity
+import com.castgalaxy.app.ui.player.PlayerActivity
+import com.castgalaxy.app.ui.player.PlayerViewModel
 import com.castgalaxy.app.utily.ObjectBox
-import com.castgalaxy.app.utily.ObjectBox.Companion.boxStore
 import com.google.android.exoplayer2.*
+import com.google.android.exoplayer2.Player.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory
 import com.google.android.exoplayer2.source.ExtractorMediaSource
@@ -43,9 +45,9 @@ import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.*
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.google.android.gms.common.images.WebImage
-import kotlinx.android.synthetic.main.activity_player.*
+import kotlinx.android.synthetic.main.activity_play_list_player.*
 
-class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener {
+class PlayListPlayerActivity : AppCompatActivity(), Player.EventListener, VideoListener {
 
     private val TAG = "GalaxyCast"
     private var mCastContext: CastContext? = null
@@ -76,15 +78,17 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     companion object {
         fun start(context: Context, videoId: String) {
-            val intent = Intent(context, PlayerActivity::class.java)
+            val intent = Intent(context, PlayListPlayerActivity::class.java)
             intent.putExtra("videoId", videoId)
             context.startActivity(intent)
         }
     }
 
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_player)
+        setContentView(R.layout.activity_play_list_player)
+
         setupCastListener()
         setupActionBar()
 
@@ -120,11 +124,11 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         videoId = intent.getStringExtra("videoId")
         viewModel.getVideo(videoId)
 
-        retry.setOnClickListener { Retry() }
+        retry.setOnClickListener { retry() }
 
     }
 
-    private fun Retry() {
+    private fun retry() {
         viewModel.getVideo(videoId)
     }
 
@@ -147,7 +151,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     private fun onVideoInfoNoConnection() {
         Toast.makeText(
-            this@PlayerActivity,
+            this@PlayListPlayerActivity,
             "No Internet Connection",
             Toast.LENGTH_LONG
         ).show()
@@ -155,14 +159,9 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         retry.visibility = View.VISIBLE
     }
 
-    private fun Context.toast(message: String) {
-        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
-    }
-
-
     private fun onVideoInfoError(message: String) {
         Toast.makeText(
-            this@PlayerActivity, message,
+            this@PlayListPlayerActivity, message,
             Toast.LENGTH_LONG
         ).show()
         loadingView.visibility = View.GONE
@@ -174,12 +173,12 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         loadingView.visibility = View.GONE
         video = data
         if (video != null && video!!.streams.isNotEmpty()) {
-            videoUrl = video?.streams!![0].url!!
+            videoUrl = video?.streams!![0].url
             setupActionBar()
             startCast()
         } else {
             Toast.makeText(
-                this@PlayerActivity,
+                this@PlayListPlayerActivity,
                 "Failed to get video info.",
                 Toast.LENGTH_LONG
             ).show()
@@ -231,10 +230,10 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
         return ExtractorMediaSource.Factory(DataSource.Factory {
             DefaultDataSourceFactory(
-                this@PlayerActivity,
+                this@PlayListPlayerActivity,
                 bandwidthMeter,
                 DefaultHttpDataSourceFactory(
-                    Util.getUserAgent(this@PlayerActivity, getString(R.string.app_name)),
+                    Util.getUserAgent(this@PlayListPlayerActivity, getString(R.string.app_name)),
                     bandwidthMeter
                 )
             ).createDataSource()
@@ -363,7 +362,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         val remoteMediaClient = mCastSession!!.remoteMediaClient ?: return
         remoteMediaClient.registerCallback(object : RemoteMediaClient.Callback() {
             override fun onStatusUpdated() {
-                val intent = Intent(this@PlayerActivity, ExpandedControlsActivity::class.java)
+                val intent = Intent(this@PlayListPlayerActivity, ExpandedControlsActivity::class.java)
                 startActivity(intent)
                 remoteMediaClient.unregisterCallback(this)
             }
@@ -511,6 +510,10 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         return super.onOptionsItemSelected(item)
     }
 
+    private fun Context.toast(message: String) {
+        Toast.makeText(this, message, Toast.LENGTH_LONG).show()
+    }
+
     private fun showQualityDialog() {
         // Late initialize an alert dialog object
         lateinit var dialog: AlertDialog
@@ -518,7 +521,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         // Initialize an array of colors
         var streamQualities = emptyArray<String>()
 
-        streamQualities = video!!.streams.mapNotNull {
+        streamQualities = video!!.streams.map {
             it.format + " - " + it.extension
         }.toTypedArray()
 
@@ -571,15 +574,25 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     override fun onPlayerStateChanged(playWhenReady: Boolean, playbackState: Int) {
         when (playbackState) {
-            Player.STATE_IDLE -> Log.i(TAG, "playbackState: STATE_IDLE")
-            Player.STATE_BUFFERING -> loadingView.visibility = View.VISIBLE
-            Player.STATE_READY -> loadingView.visibility = View.GONE
-            Player.STATE_ENDED -> toast("Video Ended")
+            STATE_IDLE -> Log.i(TAG, "playbackState: STATE_IDLE")
+            STATE_BUFFERING -> loadingView.visibility = View.VISIBLE
+            STATE_READY -> loadingView.visibility = View.GONE
+            STATE_ENDED -> getNextVideo(videoId)
             else -> {
             }
         }
     }
 
+    private fun getNextVideo(id: String) {
+        val myVideosBox = ObjectBox.boxStore.boxFor(MyVideos::class.java)
+        val currentVideo = myVideosBox.query().equal(MyVideos_.videoId, id).build().find().first()
+        val allVideos = myVideosBox.all
+        var index = (allVideos as ArrayList).indexOf(currentVideo)
+        if (index == allVideos.size - 1) index = 0 else index++
+        val newVideo = allVideos[index]
+        videoId = newVideo.videoId
+        viewModel.getVideo(videoId)
+    }
 
     override fun onRepeatModeChanged(repeatMode: Int) {
 
@@ -591,7 +604,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     override fun onPlayerError(error: ExoPlaybackException) {
         Toast.makeText(
-            this@PlayerActivity,
+            this@PlayListPlayerActivity,
             "Error Happened ${error.message}",
             Toast.LENGTH_LONG
         ).show()

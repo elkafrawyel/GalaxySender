@@ -15,6 +15,8 @@ import com.castgalaxy.app.ui.playListPlayer.PlayListPlayerActivity
 import com.castgalaxy.app.ui.player.PlayerActivity
 import com.castgalaxy.app.ui.search.MyVideosAdapter
 import com.castgalaxy.app.utily.ObjectBox.Companion.boxStore
+import com.crashlytics.android.Crashlytics
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_play_list.*
 
 class PlayListActivity : AppCompatActivity() {
@@ -38,6 +40,9 @@ class PlayListActivity : AppCompatActivity() {
         } else {
             toast("Your playlist is empty.")
         }
+
+        Fabric.with(this@PlayListActivity, Crashlytics())
+
     }
 
     private fun openVideoOptionForMyVideos(myVideos: MyVideos) {

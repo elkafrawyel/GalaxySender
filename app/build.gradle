@@ -6,6 +6,10 @@ apply plugin: 'kotlin-android-extensions'
 
 apply plugin: 'kotlin-kapt'
 
+apply plugin: 'com.google.gms.google-services'
+
+apply plugin: 'io.fabric'
+
 android {
     compileSdkVersion 28
     defaultConfig {
@@ -74,6 +78,10 @@ dependencies {
     implementation "com.squareup.retrofit2:converter-moshi:2.5.0"
     implementation "com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2"
     implementation "com.squareup.okhttp3:logging-interceptor:3.13.1"
+
+    implementation 'com.crashlytics.sdk.android:crashlytics:2.9.9'
+    implementation 'com.google.firebase:firebase-crash:16.2.1'
+    implementation 'com.google.firebase:firebase-core:16.0.8'
 
     testImplementation 'junit:junit:4.12'
     androidTestImplementation 'androidx.test:runner:1.2.0-alpha03'

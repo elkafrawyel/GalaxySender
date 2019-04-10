@@ -5,10 +5,8 @@ import android.content.Intent
 import android.os.Bundle
 import android.os.Handler
 import android.util.Log
-import android.view.LayoutInflater
-import android.view.Menu
-import android.view.MenuItem
-import android.view.View
+import android.view.*
+import android.view.inputmethod.EditorInfo
 import android.widget.*
 import androidx.appcompat.app.AppCompatActivity
 import androidx.appcompat.widget.SearchView
@@ -27,12 +25,15 @@ import com.google.android.gms.cast.framework.*
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_search.*
 import androidx.appcompat.app.AlertDialog
+import androidx.cardview.widget.CardView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
 import com.castgalaxy.app.entity.MyVideos
 import com.castgalaxy.app.entity.MyVideos_
 import com.castgalaxy.app.ui.playList.PlayListActivity
+import com.crashlytics.android.Crashlytics
 import com.google.api.services.youtube.model.SearchResult
+import io.fabric.sdk.android.Fabric
 
 
 class SearchActivity : AppCompatActivity() {
@@ -57,6 +58,10 @@ class SearchActivity : AppCompatActivity() {
 
         setupActionBar()
 
+//        var s: String = "A"
+//        val a: String? = null
+//        s = a!!
+
         viewModel.searchLiveData.observe(this, Observer { onSearchState(it) })
 
         mCastStateListener = CastStateListener { newState ->
@@ -73,9 +78,8 @@ class SearchActivity : AppCompatActivity() {
             searchView.clearFocus();
         }
 
-        searchView.setOnCloseListener {
+        searchView.setOnClickListener {
             getSearchQueries()
-            return@setOnCloseListener true
         }
 
 
@@ -122,6 +126,9 @@ class SearchActivity : AppCompatActivity() {
             }
 
         fabBtn.setOnClickListener { openBottomSheet() }
+
+        Fabric.with(this@SearchActivity, Crashlytics())
+
     }
 
     private fun showVideoOptions(searchResult: SearchResult) {
@@ -190,12 +197,18 @@ class SearchActivity : AppCompatActivity() {
             bottomSheet.dismiss()
         }
 
+        bottomSheetView.findViewById<LinearLayout>(R.id.allowedUrls).setOnClickListener {
+            bottomSheet.dismiss()
+            openAddUrl()
+        }
+
         bottomSheet.show()
     }
 
     private fun openAddUrl() {
         val input = EditText(this);
         input.hint = "Add a media url to play"
+        input.gravity = Gravity.CENTER
         val lp = LinearLayout.LayoutParams(
             LinearLayout.LayoutParams.MATCH_PARENT,
             LinearLayout.LayoutParams.MATCH_PARENT

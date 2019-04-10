@@ -1,56 +1,175 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:layout_margin="12dp"
-    android:background="@drawable/rounded_white"
+    android:layout_margin="18sp"
+    android:background="@android:color/transparent"
     app:behavior_hideable="true"
     app:behavior_peekHeight="80dp"
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
-    <TextView
-        android:id="@+id/playlistTv"
-        android:layout_width="0dp"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_playlist_add_black_24dp"
-        android:drawablePadding="12dp"
-        android:padding="8dp"
-        android:text="@string/playlist"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@id/addUrlTv"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent"
-        app:layout_constraintVertical_chainStyle="packed" />
-
-    <TextView
-        android:id="@+id/addUrlTv"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:drawableStart="@drawable/ic_add_black_24dp"
-        android:drawablePadding="12dp"
-        android:padding="8dp"
-        android:text="@string/addLink"
-        android:textAppearance="?attr/textAppearanceHeadline6"
-        android:textColor="@android:color/black"
-        app:layout_constraintBottom_toTopOf="@id/cancelMbtn"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/playlistTv" />
-
-    <com.google.android.material.button.MaterialButton
-        android:id="@+id/cancelMbtn"
-        style="@style/Widget.MaterialComponents.Button.OutlinedButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_margin="8dp"
-        android:text="@string/cancel"
-        android:textColor="@android:color/holo_red_dark"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/addUrlTv"
-        app:strokeColor="@android:color/holo_red_dark" />
-</androidx.constraintlayout.widget.ConstraintLayout>
+        app:layout_constraintTop_toTopOf="parent"
+        android:layout_marginTop="8dp">
+
+        <TextView
+            android:id="@+id/playlistTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_playlist_add_black_24dp"
+            android:drawablePadding="12dp"
+            android:padding="8dp"
+            android:text="@string/playlist"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toTopOf="@id/addUrlTv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="@id/allowedUrls"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_chainStyle="packed" />
+
+        <TextView
+            android:id="@+id/addUrlTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:drawableStart="@drawable/ic_add_black_24dp"
+            android:drawablePadding="12dp"
+            android:padding="8dp"
+            android:text="@string/addLink"
+            android:textAppearance="?attr/textAppearanceHeadline6"
+            android:textColor="@android:color/white"
+            app:layout_constraintBottom_toTopOf="@id/allowedUrls"
+            app:layout_constraintStart_toStartOf="@id/allowedUrls"
+            app:layout_constraintTop_toBottomOf="@id/playlistTv" />
+
+        <TextView
+            android:id="@+id/supportLinksTv"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:padding="8dp"
+            android:text="@string/supportedLinks"
+            android:textAppearance="?attr/textAppearanceBody1"
+            android:textColor="@android:color/darker_gray"
+            app:layout_constraintBottom_toBottomOf="@id/addUrlTv"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toEndOf="@id/addUrlTv"
+            app:layout_constraintTop_toBottomOf="@id/playlistTv" />
+
+        <LinearLayout
+            android:id="@+id/allowedUrls"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:layout_marginEnd="8dp"
+            android:layout_marginBottom="8dp"
+            android:orientation="horizontal"
+            app:layout_constraintBottom_toTopOf="@id/allowedUrls"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/addUrlTv">
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="8dp"
+                android:src="@drawable/facebook" />
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="8dp"
+                android:src="@drawable/twitter" />
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="8dp"
+                android:src="@drawable/instgram" />
+
+            <ImageView
+                android:layout_width="70dp"
+                android:layout_height="70dp"
+                android:padding="8dp"
+                android:src="@drawable/tumblr" />
+
+            <ImageView
+                android:layout_width="60dp"
+                android:layout_height="60dp"
+                android:padding="8dp"
+                android:src="@drawable/link" />
+        </LinearLayout>
+
+        <!--<LinearLayout-->
+        <!--android:id="@+id/allowedUrls2"-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginStart="12dp"-->
+        <!--android:layout_marginTop="8dp"-->
+        <!--android:layout_marginEnd="12dp"-->
+        <!--android:layout_marginBottom="8dp"-->
+        <!--android:orientation="horizontal"-->
+        <!--app:layout_constraintBottom_toTopOf="@id/cancelMbtn"-->
+        <!--app:layout_constraintEnd_toEndOf="parent"-->
+        <!--app:layout_constraintStart_toStartOf="parent"-->
+        <!--app:layout_constraintTop_toBottomOf="@id/allowedUrls1">-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="8dp"-->
+        <!--android:src="@drawable/ic_remove_from_queue_white_36dp" />-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="8dp"-->
+        <!--android:src="@drawable/ic_remove_from_queue_white_36dp" />-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="8dp"-->
+        <!--android:src="@drawable/ic_remove_from_queue_white_36dp" />-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="8dp"-->
+        <!--android:src="@drawable/ic_remove_from_queue_white_36dp" />-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="8dp"-->
+        <!--android:src="@drawable/ic_remove_from_queue_white_36dp" />-->
+
+        <!--<ImageView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:padding="8dp"-->
+        <!--android:src="@drawable/ic_remove_from_queue_white_36dp" />-->
+        <!--</LinearLayout>-->
+
+        <com.google.android.material.button.MaterialButton
+            android:id="@+id/cancelMbtn"
+            style="@style/Widget.MaterialComponents.Button.OutlinedButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="8dp"
+            android:text="@string/cancel"
+            android:textColor="@color/colorPrimary"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/allowedUrls"
+            app:strokeColor="@android:color/white" />
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</androidx.cardview.widget.CardView>

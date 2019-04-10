@@ -18,6 +18,7 @@ import androidx.lifecycle.ViewModelProviders
 import com.castgalaxy.app.R
 import com.castgalaxy.app.entity.Video
 import com.castgalaxy.app.ui.expandedcontrols.ExpandedControlsActivity
+import com.crashlytics.android.Crashlytics
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
 import com.google.android.exoplayer2.extractor.ts.DefaultTsPayloadReaderFactory
@@ -39,6 +40,7 @@ import com.google.android.gms.cast.MediaMetadata
 import com.google.android.gms.cast.framework.*
 import com.google.android.gms.cast.framework.media.RemoteMediaClient
 import com.google.android.gms.common.images.WebImage
+import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_player.*
 
 private const val VIDEO = "videoId"
@@ -139,6 +141,8 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
 
         retry.setOnClickListener { retry() }
+
+        Fabric.with(this@PlayerActivity, Crashlytics())
 
     }
 

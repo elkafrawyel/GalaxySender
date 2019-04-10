@@ -11,9 +11,10 @@
     <string name="playlist" tools:ignore="MissingTranslation">Playlist</string>
     <string name="addLink" tools:ignore="MissingTranslation">Add Url</string>
     <string name="cancel" tools:ignore="MissingTranslation">Cancel</string>
-    <string name="play">Play</string>
-    <string name="addToPlaylist">Add to playlist</string>
-    <string name="removeFromPlayList">Remove</string>
+    <string name="play" tools:ignore="MissingTranslation">Play</string>
+    <string name="addToPlaylist" tools:ignore="MissingTranslation">Add to playlist</string>
+    <string name="removeFromPlayList" tools:ignore="MissingTranslation">Remove</string>
+    <string name="supportedLinks" tools:ignore="MissingTranslation">(supported links)</string>
     <!--F8625674? ower appId-->
     <!--B87E66CB? ower appId-->
     <!--4F8B3483? defaut appId-->

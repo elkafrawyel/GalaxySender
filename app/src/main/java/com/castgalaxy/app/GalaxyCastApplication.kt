@@ -4,6 +4,7 @@ import android.app.Application
 import com.blankj.utilcode.util.Utils
 import com.castgalaxy.app.remote.RetrofitService
 import com.castgalaxy.app.utily.ObjectBox
+import com.castgalaxy.app.local.PreferencesHelper
 import com.google.api.client.googleapis.extensions.android.gms.auth.GoogleAccountCredential
 import com.google.api.client.util.ExponentialBackOff
 import com.google.api.services.youtube.YouTubeScopes
@@ -22,6 +23,7 @@ class GalaxyCastApplication : Application() {
         Utils.init(this)
         ObjectBox.init(this)
     }
+
 
     companion object {
         lateinit var instance: GalaxyCastApplication
@@ -53,5 +55,8 @@ class GalaxyCastApplication : Application() {
 
             return retrofit.create(RetrofitService::class.java)
         }
+
+        fun getPreferenceHelper() = PreferencesHelper(instance)
+
     }
 }

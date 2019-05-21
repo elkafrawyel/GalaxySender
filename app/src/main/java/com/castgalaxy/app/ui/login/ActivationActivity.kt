@@ -7,6 +7,7 @@ import kotlinx.android.synthetic.main.activity_main.*
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import android.widget.Toast
+import com.castgalaxy.app.GalaxyCastApplication
 import com.castgalaxy.app.R
 import com.crashlytics.android.Crashlytics
 import io.fabric.sdk.android.Fabric
@@ -30,13 +31,20 @@ class ActivationActivity : AppCompatActivity() {
         logo.startAnimation(rotate)
 
         activationMbtn.setOnClickListener {
-            if (activeCode.text.toString().isNotEmpty() && activeCode.text.toString().equals("hmaserv123")) {
+//            if (activeCode.text.toString().isNotEmpty() && activeCode.text.toString().equals("hmaserv123")) {
+//                GalaxyCastApplication.getPreferenceHelper().active_code = activeCode.text.toString()
                 val intent = Intent(this, CheckActivity::class.java)
                 startActivity(intent)
                 finish()
-            }else{
-                Toast.makeText(this,"Invalid Code", Toast.LENGTH_LONG).show()
-            }
+//            }else{
+//                Toast.makeText(this,"Invalid Code", Toast.LENGTH_LONG).show()
+//            }
+        }
+
+        if (GalaxyCastApplication.getPreferenceHelper().active_code !=null){
+            val intent = Intent(this, CheckActivity::class.java)
+            startActivity(intent)
+            finish()
         }
 
         Fabric.with(this@ActivationActivity,Crashlytics())

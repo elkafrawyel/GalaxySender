@@ -86,33 +86,49 @@
         android:layout_width="0dp"
         android:layout_height="wrap_content"
         android:layout_marginTop="4dp"
-        android:visibility="gone"
         android:background="@drawable/rounded"
+        android:padding="8dp"
+        android:visibility="gone"
         app:layout_constraintEnd_toEndOf="@id/searchView"
         app:layout_constraintStart_toStartOf="@id/searchView"
-        app:layout_constraintTop_toBottomOf="@id/searchView"
-        android:padding="8dp"/>
+        app:layout_constraintTop_toBottomOf="@id/searchView" />
 
     <com.google.android.material.floatingactionbutton.FloatingActionButton
         android:id="@+id/fabBtn"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
         android:layout_margin="36dp"
-        app:srcCompat="@drawable/ic_add_black_24dp"
-        app:tint="@android:color/white"
         app:backgroundTint="@color/colorPrimaryDark"
-        app:rippleColor="@color/colorPrimary" />
-
-    <fragment
-        android:id="@+id/castMiniController"
-        class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
-        android:layout_width="0dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:rippleColor="@color/colorPrimary"
+        app:srcCompat="@drawable/ic_add_black_24dp"
+        app:tint="@android:color/white" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        android:layout_marginBottom="36dp"
+        android:id="@+id/smallVideo"
+        android:visibility="gone">
+
+        <ImageView
+            android:id="@+id/videoImage"
+            android:layout_width="120dp"
+            android:layout_height="70dp"
+            android:scaleType="centerCrop"
+            android:src="@drawable/test" />
+
+        <ImageView
+            android:id="@+id/searchPlayPause"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:tag=""
+            android:src="@drawable/ic_play_circle_filled_white_24dp" />
+    </LinearLayout>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

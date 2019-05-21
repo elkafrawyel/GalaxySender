@@ -6,9 +6,10 @@
         android:icon="@drawable/ic_quality"
         android:title="@string/player_video_quality"
         app:showAsAction="always" />
+
     <item
-        android:id="@+id/player_cast_menu_item"
-        android:title="@string/media_route_menu_title"
-        app:actionProviderClass="androidx.mediarouter.app.MediaRouteActionProvider"
+        android:id="@+id/player_connect"
+        android:icon="@drawable/ic_cast_white_24dp"
+        android:title="@string/player_video_quality"
         app:showAsAction="always" />
 </menu>

@@ -51,14 +51,5 @@
         app:lottie_loop="true"
         app:lottie_rawRes="@raw/loading" />
 
-    <fragment
-        android:id="@+id/castMiniController"
-        class="com.google.android.gms.cast.framework.media.widget.MiniControllerFragment"
-        android:layout_width="270dp"
-        android:layout_height="wrap_content"
-        android:visibility="gone"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

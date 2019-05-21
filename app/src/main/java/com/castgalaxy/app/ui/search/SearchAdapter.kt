@@ -45,7 +45,7 @@ class SearchAdapter : BaseQuickAdapter<SearchResult, BaseViewHolder>(R.layout.se
 //    private val time = itemView.time
 //
 //    fun bind(snippet: SearchResultSnippet) {
-//        Glide.with(itemView).load(snippet.thumbnails.medium.url).into(image)
+//        Glide.with(itemView).load(snippet.thumbnails.medium.urlList).into(image)
 //        Log.i("image", "height: ${snippet.thumbnails.medium.height} width: ${snippet.thumbnails.medium.width}")
 //        title.text = snippet.title
 //        channelName.text = snippet.channelTitle

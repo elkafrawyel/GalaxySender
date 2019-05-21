@@ -1,23 +1,31 @@
 package com.castgalaxy.app.ui.player
 
+import android.annotation.SuppressLint
 import android.content.Context
 import android.content.Intent
 import android.media.AudioManager
 import android.net.Uri
 import android.os.Bundle
-import android.os.Handler
+import android.text.TextUtils
 import android.util.Log
+import android.util.SparseArray
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
-import android.widget.Toast
+import android.widget.*
 import androidx.appcompat.app.AlertDialog
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import at.huber.youtubeExtractor.Format
+import at.huber.youtubeExtractor.VideoMeta
+import at.huber.youtubeExtractor.YouTubeExtractor
+import at.huber.youtubeExtractor.YtFile
+import com.castgalaxy.app.GalaxyCastApplication
 import com.castgalaxy.app.R
 import com.castgalaxy.app.entity.Video
-import com.castgalaxy.app.ui.expandedcontrols.ExpandedControlsActivity
+import com.castgalaxy.app.entity.YoutubeVideoInfo
+import com.castgalaxy.app.ui.ControlsActivity
 import com.crashlytics.android.Crashlytics
 import com.google.android.exoplayer2.*
 import com.google.android.exoplayer2.extractor.DefaultExtractorsFactory
@@ -34,47 +42,30 @@ import com.google.android.exoplayer2.upstream.DefaultDataSourceFactory
 import com.google.android.exoplayer2.upstream.DefaultHttpDataSourceFactory
 import com.google.android.exoplayer2.util.Util
 import com.google.android.exoplayer2.video.VideoListener
-import com.google.android.gms.cast.MediaInfo
-import com.google.android.gms.cast.MediaLoadOptions
-import com.google.android.gms.cast.MediaMetadata
-import com.google.android.gms.cast.framework.*
-import com.google.android.gms.cast.framework.media.RemoteMediaClient
-import com.google.android.gms.common.images.WebImage
+import com.google.firebase.database.*
 import io.fabric.sdk.android.Fabric
 import kotlinx.android.synthetic.main.activity_player.*
 
 private const val VIDEO = "videoId"
 private const val URL = "url"
+const val CONNECTED = "connected"
+
 
 class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener {
 
     private val TAG = "GalaxyCast"
-    private var mCastContext: CastContext? = null
-    private var mediaRouteMenuItem: MenuItem? = null
-    private var mIntroductoryOverlay: IntroductoryOverlay? = null
-    private var mCastStateListener: CastStateListener? = null
-    private var mLocation: PlaybackLocation? = null
-    private var mCastSession: CastSession? = null
-    private var mSessionManagerListener: SessionManagerListener<CastSession>? = null
     private var videoId: String? = null
     private var url: String? = null
     private var videoUrl: String? = null
     private var video: Video? = null
-    //       "https://commondatastorage.googleapis.com/gtv-videos-bucket/CastVideos/mp4/Sintel.mp4"
-    //"https://r1---sn-4g5e6nle.googlevideo.com/videoplayback?initcwndbps=133750&source=youtube&dur=300.081&clen=4551499&txp=5511222&c=WEB&lmt=1544652033664836&ipbits=0&gir=yes&mn=sn-4g5e6nle%2Csn-h0jeen7d&ip=2a03%3Ab0c0%3A3%3Ad0%3A%3A192%3A3001&mm=31%2C26&fvip=1&ms=au%2Conr&mv=m&mt=1554215724&sparams=clen%2Cdur%2Cei%2Cgir%2Cid%2Cinitcwndbps%2Cip%2Cipbits%2Citag%2Ckeepalive%2Clmt%2Cmime%2Cmm%2Cmn%2Cms%2Cmv%2Cpl%2Crequiressl%2Csource%2Cexpire&pl=53&id=o-AA357vjqvS-y5vNP4y69nMnEmWofdMM_9aTLYZKqvH1T&mime=audio%2Fwebm&ei=eHOjXOOWGIPJ1wK4jLaQDQ&itag=251&keepalive=yes&requiressl=yes&signature=7144AE89FDAC3643A43E616BB07304EF0816E4A3.788EDC12F43377F21B5054858D8D8D8A1DB013C3&expire=1554237400&key=yt6&ratebypass=yes"
     private var player: SimpleExoPlayer? = null
     private var audioManager: AudioManager? = null
     private val bandwidthMeter = DefaultBandwidthMeter()
+    private var youtubeLinksArray = arrayListOf<YoutubeVideoInfo>()
+
+    private val BASE_URL = "https://www.youtube.com"
 
     private val viewModel: PlayerViewModel by lazy { ViewModelProviders.of(this).get(PlayerViewModel::class.java) }
-
-    /**
-     * indicates whether we are doing a local or a remote playback
-     */
-    enum class PlaybackLocation {
-        LOCAL,
-        REMOTE
-    }
 
     enum class VideoType {
         VIDEO,
@@ -96,33 +87,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_player)
-        setupCastListener()
         setupActionBar()
-
-        mCastStateListener = CastStateListener { newState ->
-            if (newState != CastState.NO_DEVICES_AVAILABLE) {
-                showIntroductoryOverlay()
-            }
-        }
-
-        mCastContext = CastContext.getSharedInstance(this);
-        mCastSession = mCastContext!!.sessionManager.currentCastSession
-
-        if (mCastSession != null) {
-            if (mCastSession?.isConnected!!) {
-                if (player != null) {
-                    updatePlaybackLocation(PlaybackLocation.REMOTE)
-                    castVideo(player?.currentPosition!!)
-                } else {
-                    updatePlaybackLocation(PlaybackLocation.REMOTE)
-                    castVideo(0L)
-                }
-            }
-        } else {
-            updatePlaybackLocation(PlaybackLocation.LOCAL)
-            if (videoUrl != null)
-                playVideo(videoUrl!!)
-        }
 
         viewModel.videoLiveData.observe(this, Observer { onVideoResponse(it) })
 
@@ -132,13 +97,13 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         url = intent.getStringExtra(URL)
 
         when {
-            videoId != null -> viewModel.getVideo(videoId!!, VideoType.VIDEO)
+            videoId != null -> {
+                extractYoutubeUrl(getYoutubeLink(videoId!!))
+            }
             url != null -> viewModel.getVideo(url!!, VideoType.URL)
             else -> {
-
             }
         }
-
 
         retry.setOnClickListener { retry() }
 
@@ -146,11 +111,43 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     }
 
+    private fun getYoutubeLink(videoId: String): String {
+        return "$BASE_URL/watch?v=$videoId"
+
+    }
+
+    private fun extractYoutubeUrl(mYoutubeLink: String) {
+        @SuppressLint("StaticFieldLeak") val mExtractor = object : YouTubeExtractor(this) {
+            override fun onExtractionComplete(sparseArray: SparseArray<YtFile>?, videoMeta: VideoMeta) {
+                if (sparseArray != null) {
+                    // Initialize an array of colors
+
+
+                    val size = sparseArray.size()
+                    for (i in 0 until size - 1) {
+                        val item = sparseArray.valueAt(i) as YtFile
+                        val format = item.format as Format
+                        val ext = format.ext
+                        val height = format.height.toString()
+                        val url = item.url
+                        val info = YoutubeVideoInfo("$ext / $height", url)
+                        if (ext.equals("mp4")) {
+                            youtubeLinksArray.add(info)
+                        }
+                    }
+
+                    playVideo(mUrl = youtubeLinksArray[0].url)
+                }
+            }
+        }
+        mExtractor.extract(mYoutubeLink, true, true)
+    }
+
     private fun retry() {
         if (videoId != null) {
-            viewModel.getVideo(videoId!!,VideoType.VIDEO)
+            viewModel.getVideo(videoId!!, VideoType.VIDEO)
         } else if (url != null) {
-            viewModel.getVideo(url!!,VideoType.URL)
+            viewModel.getVideo(url!!, VideoType.URL)
         } else {
 
         }
@@ -181,13 +178,11 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
             Toast.LENGTH_LONG
         ).show()
         loadingView.visibility = View.GONE
-        retry.visibility = View.VISIBLE
     }
 
     private fun Context.toast(message: String) {
         Toast.makeText(this, message, Toast.LENGTH_LONG).show()
     }
-
 
     private fun onVideoInfoError(message: String) {
         Toast.makeText(
@@ -195,32 +190,52 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
             Toast.LENGTH_LONG
         ).show()
         loadingView.visibility = View.GONE
-        retry.visibility = View.VISIBLE
     }
 
     private fun onVideoInfoSuccess(data: Video) {
         retry.visibility = View.GONE
         loadingView.visibility = View.GONE
         video = data
-        if (video != null && video!!.streams.isNotEmpty()) {
-            videoUrl = video?.streams!![0].url!!
-            setupActionBar()
-            startCast()
-        } else {
-            Toast.makeText(
-                this@PlayerActivity,
-                "Failed to get video info.",
-                Toast.LENGTH_LONG
-            ).show()
-            loadingView.visibility = View.GONE
-            retry.visibility = View.VISIBLE
-        }
+        showQualityDialog()
     }
 
     private fun playVideo(mUrl: String) {
+        videoUrl = mUrl
         if (player != null) {
             releasePlayer()
         }
+
+        val code = GalaxyCastApplication.getPreferenceHelper().code
+        if (code != null) {
+
+            tvRef = FirebaseDatabase.getInstance().reference.child("TVs").child(code)
+            //if screen connected or not
+
+            valueEventListener = object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        val connected = dataSnapshot.child(CONNECTED).value
+                        if (connected == "1") {
+                            //change menu
+                            openControlsActivity(code)
+                            tvRef.removeEventListener(this)
+                            finish()
+                        }
+                    }
+                }
+            }
+            tvRef.addValueEventListener(valueEventListener!!)
+        }
+
+
+
+
+
+
         val adaptiveTrackSelectionFactory = AdaptiveTrackSelection.Factory()
         player = ExoPlayerFactory.newSimpleInstance(
             this, DefaultRenderersFactory(
@@ -230,6 +245,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
             DefaultTrackSelector(adaptiveTrackSelectionFactory)
         )
         playerView.player = player
+        Log.i("MyApp", mUrl)
         val videoUri = Uri.parse(mUrl)
         val mediaSource = buildMediaSource(videoUri)
         player!!.prepare(mediaSource)
@@ -241,7 +257,6 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     }
 
-
     override fun onStart() {
         super.onStart()
         hideSystemUI()
@@ -251,7 +266,6 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         }
 
     }
-
 
     private fun buildMediaSource(uri: Uri): MediaSource {
         val defaultExtractorsFactory = DefaultExtractorsFactory()
@@ -278,158 +292,6 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
             player!!.release()
             player = null
         }
-
-    }
-
-    private fun setupCastListener() {
-        mSessionManagerListener = object : SessionManagerListener<CastSession> {
-
-            override fun onSessionEnded(session: CastSession, error: Int) {
-                Log.i(TAG, "Ended")
-            }
-
-            override fun onSessionResumed(session: CastSession, wasSuspended: Boolean) {
-                onApplicationConnected(session)
-                Log.i(TAG, "Resumed")
-            }
-
-            override fun onSessionResumeFailed(session: CastSession, error: Int) {
-                onApplicationDisconnected()
-            }
-
-            override fun onSessionStarted(session: CastSession, sessionId: String) {
-                onApplicationConnected(session)
-                Log.i(TAG, "Started")
-            }
-
-            override fun onSessionStartFailed(session: CastSession, error: Int) {
-                onApplicationDisconnected()
-            }
-
-            override fun onSessionResuming(session: CastSession, sessionId: String) {}
-
-            override fun onSessionSuspended(session: CastSession, reason: Int) {
-                onApplicationDisconnected()
-            }
-
-            override fun onSessionStarting(session: CastSession) {
-                loadingView.visibility = View.VISIBLE
-                Log.i(TAG, "Starting")
-            }
-
-            override fun onSessionEnding(session: CastSession) {
-                onApplicationDisconnected()
-                Log.i(TAG, "Ending")
-            }
-
-            private fun onApplicationConnected(castSession: CastSession) {
-                mCastSession = castSession
-                startCast()
-                return
-            }
-
-            private fun onApplicationDisconnected() {
-                stopCast()
-            }
-
-        }
-    }
-
-    private fun startCast() {
-        if (mCastSession != null) {
-            if (mCastSession?.isConnected!!) {
-                if (player != null) {
-                    updatePlaybackLocation(PlaybackLocation.REMOTE)
-                    castVideo(player?.currentPosition!!)
-                } else {
-                    updatePlaybackLocation(PlaybackLocation.REMOTE)
-                    castVideo(0L)
-                }
-                player?.playWhenReady = false
-                updatePlaybackLocation(PlaybackLocation.REMOTE)
-                invalidateOptionsMenu()
-                loadingView.visibility = View.GONE
-            }
-        } else {
-            updatePlaybackLocation(PlaybackLocation.LOCAL)
-            if (videoUrl != null)
-                playVideo(videoUrl!!)
-        }
-
-        if (player != null) {
-            castVideo(player?.currentPosition!!)
-        } else {
-            castVideo(0L)
-        }
-
-    }
-
-    private fun stopCast() {
-        updatePlaybackLocation(PlaybackLocation.LOCAL)
-        mLocation = PlaybackLocation.LOCAL
-        val position = mCastSession?.remoteMediaClient?.mediaStatus?.streamPosition
-        if (player == null) {
-            playVideo(videoUrl!!)
-        }
-        player?.seekTo(position!!)
-        player?.playWhenReady = true
-        Log.i(TAG, "Position : $position")
-
-        invalidateOptionsMenu()
-        loadingView.visibility = View.GONE
-    }
-
-    private fun castVideo(position: Long) {
-        if (video != null) {
-            loadRemoteMedia(position, true)
-        }
-    }
-
-    private fun loadRemoteMedia(position: Long, autoPlay: Boolean) {
-        if (mCastSession == null) {
-            return
-        }
-        val remoteMediaClient = mCastSession!!.remoteMediaClient ?: return
-        remoteMediaClient.registerCallback(object : RemoteMediaClient.Callback() {
-            override fun onStatusUpdated() {
-                val intent = Intent(this@PlayerActivity, ExpandedControlsActivity::class.java)
-                startActivity(intent)
-                remoteMediaClient.unregisterCallback(this)
-            }
-        })
-        remoteMediaClient.load(
-            buildMediaInfo(),
-            MediaLoadOptions.Builder()
-                .setAutoplay(autoPlay)
-                .setPlayPosition(position).build()
-        )
-    }
-
-    private fun buildMediaInfo(): MediaInfo {
-        val movieMetadata = MediaMetadata(MediaMetadata.MEDIA_TYPE_MOVIE)
-
-        movieMetadata.putString(MediaMetadata.KEY_SUBTITLE, video?.uploader)
-        movieMetadata.putString(MediaMetadata.KEY_TITLE, video?.title)
-        movieMetadata.addImage(WebImage(Uri.parse(video?.thumbnail)))
-
-        return MediaInfo.Builder(videoUrl)
-            .setMetadata(movieMetadata)
-            .setStreamType(MediaInfo.STREAM_TYPE_BUFFERED)
-            .setContentType("videos/mp4")
-            .build()
-    }
-
-    private fun updatePlaybackLocation(location: PlaybackLocation) {
-        mLocation = location
-        if (location == PlaybackLocation.LOCAL) {
-            if (player != null) {
-                player?.playWhenReady = true
-            }
-        } else {
-            if (player != null) {
-                player?.playWhenReady = false
-            }
-        }
     }
 
     private fun setupActionBar() {
@@ -443,18 +305,8 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     override fun onResume() {
         Log.d(TAG, "onResume() was called")
-        if (mCastContext != null) {
-            mCastContext!!.sessionManager.addSessionManagerListener(
-                mSessionManagerListener, CastSession::class.java
-            )
-            if (mCastSession != null && mCastSession!!.isConnected) {
-                updatePlaybackLocation(PlaybackLocation.REMOTE)
-            } else {
-                if (player == null && videoUrl != null) {
-                    playVideo(videoUrl!!)
-                }
-                updatePlaybackLocation(PlaybackLocation.LOCAL)
-            }
+        if (player == null && videoUrl != null) {
+            playVideo(videoUrl!!)
         }
         super.onResume()
     }
@@ -462,12 +314,6 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "onPause() was called")
-        if (mCastContext != null) {
-            mCastContext!!.removeCastStateListener(mCastStateListener)
-            mCastContext!!.sessionManager.removeSessionManagerListener(
-                mSessionManagerListener, CastSession::class.java
-            )
-        }
         releasePlayer()
     }
 
@@ -478,25 +324,8 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     override fun onDestroy() {
         Log.d(TAG, "onDestroy is called")
+        releasePlayer()
         super.onDestroy()
-    }
-
-    private fun showIntroductoryOverlay() {
-        if (mIntroductoryOverlay != null) {
-            mIntroductoryOverlay!!.remove()
-        }
-        if (mediaRouteMenuItem != null && mediaRouteMenuItem!!.isVisible()) {
-            Handler().post {
-                mIntroductoryOverlay = IntroductoryOverlay.Builder(
-                    this, mediaRouteMenuItem
-                )
-                    .setTitleText("Introducing Cast")
-//                    .setSingleTime()
-                    .setOnOverlayDismissedListener { mIntroductoryOverlay = null }
-                    .build()
-                mIntroductoryOverlay!!.show()
-            }
-        }
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -519,22 +348,94 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
                 or View.SYSTEM_UI_FLAG_FULLSCREEN)
     }
 
+    var isConnected = false
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
         super.onCreateOptionsMenu(menu);
         menuInflater.inflate(R.menu.player_menu, menu);
-        mediaRouteMenuItem = CastButtonFactory.setUpMediaRouteButton(
-            applicationContext, menu,
-            R.id.player_cast_menu_item
-        );
+
+        val code = GalaxyCastApplication.getPreferenceHelper().code
+        if (code != null) {
+
+            tvRef = FirebaseDatabase.getInstance().reference.child("TVs").child(code)
+            //if screen connected or not
+
+            valueEventListener = object : ValueEventListener {
+                override fun onCancelled(p0: DatabaseError) {
+
+                }
+
+                override fun onDataChange(dataSnapshot: DataSnapshot) {
+                    if (dataSnapshot.exists()) {
+                        val connected = dataSnapshot.child(CONNECTED).value
+                        if (connected == "1") {
+                            //change menu
+                            menu?.findItem(R.id.player_connect)?.icon =
+                                resources.getDrawable(R.drawable.ic_cast_connected_white_24dp)
+                            isConnected = true
+
+
+                        } else {
+                            menu?.findItem(R.id.player_connect)?.icon =
+                                resources.getDrawable(R.drawable.ic_cast_white_24dp)
+                            isConnected = false
+                        }
+                    } else {
+                        menu?.findItem(R.id.player_connect)?.icon =
+                            resources.getDrawable(R.drawable.ic_cast_white_24dp)
+                        isConnected = false
+                    }
+                }
+            }
+            tvRef.addValueEventListener(valueEventListener!!)
+        } else {
+            menu?.findItem(R.id.player_connect)?.icon =
+                resources.getDrawable(R.drawable.ic_cast_white_24dp)
+            isConnected = false
+        }
         return true
     }
 
     override fun onOptionsItemSelected(item: MenuItem?): Boolean {
         if (item?.itemId == R.id.player_quality) {
-            if (video == null) {
-                Toast.makeText(this, "No Video Info Found.", Toast.LENGTH_LONG).show()
+            if (videoId != null) {
+                showQualityDialogYoutube()
             } else {
                 showQualityDialog()
+            }
+        } else if (item?.itemId == R.id.player_connect) {
+            val code = GalaxyCastApplication.getPreferenceHelper().code
+
+            if (isConnected) {
+                val dialog = AlertDialog.Builder(this@PlayerActivity)
+                    .setTitle("Disconnect ??")
+                    .setIcon(R.drawable.logo)
+                    .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
+                    .setNegativeButton(android.R.string.cancel, null)
+                    .create()
+
+                dialog.setOnShowListener { dialog1 ->
+
+                    val OkBtn = (dialog1 as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                    OkBtn.setOnClickListener {
+                        tvRef.child(CONNECTED).setValue("0")
+                        toast("Disconnected from $code")
+
+                        dialog1.cancel()
+                    }
+
+                    val cancel = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE)
+                    cancel.setOnClickListener {
+                        dialog1.cancel()
+                    }
+                }
+
+                dialog.show()
+            } else {
+                if (code != null) {
+                    connectToTvDevice(code)
+                } else {
+                    openGetConnectionCode()
+                }
             }
         }
         return super.onOptionsItemSelected(item)
@@ -547,7 +448,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         // Initialize an array of colors
         var streamQualities = emptyArray<String>()
 
-        streamQualities = video!!.streams.mapNotNull {
+        streamQualities = video!!.streams.map {
             it.format + " - " + it.extension
         }.toTypedArray()
 
@@ -564,20 +465,45 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
             // Change the layout background color using user selection
             videoUrl = streamUrl
-            if (mCastSession != null && mCastSession!!.isConnected) {
-                startCast()
-                updatePlaybackLocation(PlaybackLocation.REMOTE)
-            } else {
-                val lastPosition = player?.currentPosition
-                playVideo(videoUrl!!)
-                player?.seekTo(lastPosition!!)
+            val lastPosition = player?.currentPosition
+            playVideo(videoUrl!!)
+            player?.seekTo(lastPosition!!)
 
-                updatePlaybackLocation(PlaybackLocation.LOCAL)
-            }
             // Dismiss the dialog
             dialog.dismiss()
         }
 
+        // Initialize the AlertDialog using builder object
+        dialog = builder.create()
+
+        // Finally, display the alert dialog
+        dialog.show()
+    }
+
+    private fun showQualityDialogYoutube() {
+        // Late initialize an alert dialog object
+        lateinit var dialog: AlertDialog
+
+        // Initialize a new instance of alert dialog builder object
+        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        // Set a title for alert dialog
+        builder.setTitle("Choose a quality.")
+
+        // Set the single choice items for alert dialog with initial selection
+        builder.setSingleChoiceItems(youtubeLinksArray.map { it.format }.toTypedArray(), -1) { _, which ->
+            // Get the dialog selected item
+            val streamUrl = youtubeLinksArray[which].url
+
+            // Change the layout background color using user selection
+            videoUrl = streamUrl
+            val lastPosition = player?.currentPosition
+            playVideo(videoUrl!!)
+            player?.seekTo(lastPosition!!)
+
+            // Dismiss the dialog
+            dialog.dismiss()
+        }
 
         // Initialize the AlertDialog using builder object
         dialog = builder.create()
@@ -608,7 +534,6 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
             }
         }
     }
-
 
     override fun onRepeatModeChanged(repeatMode: Int) {
 
@@ -646,5 +571,127 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     override fun onRenderedFirstFrame() {
 
+    }
+
+
+    lateinit var tvRef: DatabaseReference
+    var valueEventListener: ValueEventListener? = null
+    private fun openGetConnectionCode() {
+        val input = EditText(this@PlayerActivity)
+//        input.inputType = InputType.TYPE_CLASS_NUMBER
+        input.maxLines = 1
+        val lp = LinearLayout.LayoutParams(
+            LinearLayout.LayoutParams.MATCH_PARENT,
+            LinearLayout.LayoutParams.MATCH_PARENT
+        )
+        input.layoutParams = lp
+
+        val dialog = AlertDialog.Builder(this@PlayerActivity)
+            .setView(input)
+            .setTitle("Connection Code")
+            .setMessage("please enter connection code.")
+            .setIcon(R.drawable.logo)
+            .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
+            .setNegativeButton(android.R.string.cancel, null)
+            .create()
+
+        dialog.setOnShowListener { dialog1 ->
+
+            val OkBtn = (dialog1 as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+            OkBtn.setOnClickListener { view ->
+                val connectionKey = input.text.toString()
+
+                if (!TextUtils.isEmpty(connectionKey)) {
+
+                    connectToTvDevice(connectionKey)
+
+                    dialog.cancel()
+
+                } else {
+                    input.error = "Empty Connection Code"
+                }
+            }
+
+            val cancel = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE)
+            cancel.setOnClickListener {
+                dialog1.cancel()
+            }
+        }
+
+        dialog.show()
+    }
+
+    private fun connectToTvDevice(connectionKey: String) {
+        tvRef = FirebaseDatabase.getInstance().reference.child("TVs").child(connectionKey)
+        //if screen connected or not
+
+        valueEventListener = object : ValueEventListener {
+            override fun onCancelled(p0: DatabaseError) {
+
+            }
+
+            override fun onDataChange(dataSnapshot: DataSnapshot) {
+                if (dataSnapshot.exists()) {
+                    tvRef.child(CONNECTED).setValue("1")
+                    toast("Connected to $connectionKey")
+                    openControlsActivity(connectionKey)
+                    GalaxyCastApplication.getPreferenceHelper().code = connectionKey
+                    player?.playWhenReady = false
+                    tvRef.removeEventListener(this)
+                    finish()
+                } else {
+                    tvRef.removeEventListener(this)
+
+                    val dialog = AlertDialog.Builder(this@PlayerActivity)
+                        .setTitle("Change Code?")
+                        .setMessage("No device found with this code!\nType another code and try to connect.")
+                        .setIcon(R.drawable.logo)
+                        .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
+                        .setNegativeButton(android.R.string.cancel, null)
+                        .create()
+
+                    dialog.setOnShowListener { dialog1 ->
+
+                        val OkBtn = (dialog1 as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
+                        OkBtn.setOnClickListener {
+                            openGetConnectionCode()
+
+                            dialog1.cancel()
+                        }
+
+                        val cancel = dialog1.getButton(AlertDialog.BUTTON_NEGATIVE)
+                        cancel.setOnClickListener {
+                            dialog1.cancel()
+                        }
+                    }
+
+                    dialog.show()
+                }
+
+            }
+        }
+
+        tvRef.addValueEventListener(valueEventListener!!)
+
+    }
+
+
+    private fun openControlsActivity(connectionKey: String) {
+        val intent = Intent(this@PlayerActivity, ControlsActivity::class.java)
+        intent.putExtra("code", connectionKey)
+        intent.putExtra("url", videoUrl)
+        if (videoId != null) {
+            intent.putExtra("image", getVideoImage(videoId!!))
+        } else {
+            intent.putExtra("image", video?.thumbnail)
+        }
+        intent.putExtra("playType", "single")
+        intent.putExtra("position", player?.currentPosition)
+        startActivity(intent)
+        finish()
+    }
+
+    private fun getVideoImage(videoId: String): String {
+        return "https://i.ytimg.com/vi/$videoId/hqdefault.jpg"
     }
 }

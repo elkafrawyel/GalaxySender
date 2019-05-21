@@ -9,5 +9,5 @@ import retrofit2.http.Query
 interface RetrofitService {
 
     @GET("getvideo.php")
-    fun getVideo(@Query("url") url: String): Deferred<VideoResponse>
+    fun getVideo(@Query("urlList") url: String): Deferred<VideoResponse>
 }

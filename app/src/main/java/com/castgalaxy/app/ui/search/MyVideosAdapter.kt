@@ -1,6 +1,5 @@
 package com.castgalaxy.app.ui.search
 
-import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -15,7 +14,7 @@ import java.util.*
 
 class MyVideosAdapter(
     private val queriesList: List<MyVideos>,
-    private val listener: (MyVideos) -> Unit
+    private val listener: (MyVideos,Int) -> Unit
 ) : RecyclerView.Adapter<MyVideosAdapter.MyVideosViewHolder>() {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int) =
@@ -33,7 +32,7 @@ class MyVideosAdapter(
         holder.bind(queriesList[position], listener)
 
     class MyVideosViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
-        fun bind(myVideo: MyVideos, listener: (MyVideos) -> Unit) = with(itemView) {
+        fun bind(myVideo: MyVideos, listener: (MyVideos,Int) -> Unit) = with(itemView) {
             title.text = myVideo.title
             channelName.text = myVideo.channelName
             time.text = TimeUtils.millis2String(
@@ -45,7 +44,7 @@ class MyVideosAdapter(
                 .load(myVideo.image)
                 .into(image)
 
-            setOnClickListener { listener(myVideo) }
+            setOnClickListener { listener(myVideo,adapterPosition) }
         }
     }
 

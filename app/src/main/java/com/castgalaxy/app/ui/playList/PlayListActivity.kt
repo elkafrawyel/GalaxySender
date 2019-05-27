@@ -39,7 +39,8 @@ class PlayListActivity : AppCompatActivity() {
             }
             myVideosRv.adapter = adapter
         } else {
-            toast("Your playlist is empty.")
+            toast(resources.getString(R.string.emptyPlayList
+            ))
         }
 
         Fabric.with(this@PlayListActivity, Crashlytics())
@@ -79,7 +80,7 @@ class PlayListActivity : AppCompatActivity() {
         myVideosBoxStore.remove(video)
         (myVideos as ArrayList).remove(video)
         adapter.notifyDataSetChanged()
-        toast("Video deleted.")
+        toast(resources.getString(R.string.videoDeleted))
     }
 
     private fun Context.toast(message: String) {

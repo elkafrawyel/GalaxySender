@@ -24,7 +24,6 @@ class GalaxyCastApplication : Application() {
         ObjectBox.init(this)
     }
 
-
     companion object {
         lateinit var instance: GalaxyCastApplication
             private set

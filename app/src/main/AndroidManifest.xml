@@ -6,6 +6,13 @@
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.GET_ACCOUNTS" />
+    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.CAMERA" />
+
+    <uses-feature android:name="android.hardware.camera.autofocus" />
+    <uses-feature
+        android:name="android.hardware.camera"
+        android:required="true" />
 
     <application
         android:name=".GalaxyCastApplication"
@@ -17,6 +24,8 @@
         android:theme="@style/AppTheme"
         android:usesCleartextTraffic="true"
         tools:ignore="GoogleAppIndexingWarning">
+        <activity android:name=".ui.Introduction"/>
+
         <activity
             android:name=".ui.ControlsActivity"
             android:screenOrientation="landscape" />
@@ -49,6 +58,16 @@
             android:name=".ui.playListPlayer.PlayListPlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Fullscreen" />
+
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="com.castgalaxy.app.fileprovider"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/provider_paths" />
+        </provider>
     </application>
 
 </manifest>

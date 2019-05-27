@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">GalaxyCast</string>
+    <string name="waiting_for_your_search">Esperando pela sua pesquisa</string>
+    <string name="activation_code">Código de ativação</string>
+    <string name="activate">Ativar</string>
+    <string name="player_video_quality">Qualidade</string>
+    <string name="search_hint">Procurar</string>
+    <string name="playlist">Lista de reprodução</string>
+    <string name="addLink">Adicione URL</string>
+    <string name="cancel">Cancelar</string>
+    <string name="play">Toque</string>
+    <string name="addToPlaylist">Adicionar à Playlist</string>
+    <string name="removeFromPlayList">Remover</string>
+    <string name="supportedLinks">(links suportados)</string>
+    <string name="action_clear_history">Limpar histórico</string>
+    <string name="action_reset_code">Reiniciar código</string>
+    <string name="player_scan">Scan Code</string>
+    <string name="changeLanguage">língua</string>
+    <string name="autPlay">Reprodução automática</string>
+    <string name="date">Data de validade</string>
+    <string name="version">Versão do aplicativo</string>
+    <string name="licence">Licença</string>
+    <string name="Info">em formação</string>
+
+    <string name="autoPlayList"> Reprodução automática da PlayList. </string>
+    <string name="yes"> Sim </string>
+    <string name="no"> Não </string>
+    <string name="chooseLanguage"> Escolha um idioma. </string>
+    <string name="connection_code"> Código de conexão </string>
+    <string name="please_type_code"> insira o código de conexão. </string>
+    <string name="empty_code"> Código de conexão vazio </string>
+    <string name="change_code"> Mudar código? </string>
+    <string name="no_device_available"> Nenhum dispositivo com este código foi encontrado! \\n Escreva outro código e tente se conectar. </string>
+    <string name="scan_failed"> Falha na Varredura </string>
+    <string name="barCodeSetUp"> Não foi possível configurar o detector de código de barras! </string>
+    <string name="loadImageFailed"> Erro ao carregar imagem </string>
+    <string name="youWantToConnect"> Deseja conectar-se a </string>
+    <string name="permissionDenied"> Permissão negada! </string>
+    <string name="connectedTo"> Conectado a </string>
+    <string name="clearHistory"> Histórico excluído </string>
+    <string name="disconnectedFrom"> Desconectado de </string>
+    <string name="disconnected"> Desconectar ?? </string>
+    <string name="noConnection"> Não há conexão com a Internet. </string>
+    <string name="search_not_working"> A pesquisa não funciona. </string>
+    <string name="empty_Url"> URL vazio não permitido </string>
+    <string name="addUrl"> Adicionar URL </string>
+    <string name="addMediaUrl"> Adicione uma URL de mídia para reproduzir </string>
+    <string name="videoAddedToPlaylist"> Vídeo adicionado à lista de reprodução. </string>
+    <string name="videoIsAddedToPlaylist"> O vídeo está na sua lista de reprodução. </string>
+    <string name="emptyPlayList"> Sua playlist está vazia. </string>
+    <string name="videoDeleted"> Vídeo removido. </string>
+    <string name="chooseQuality"> Escolha uma qualidade. </string>
+    <string name="playerError"> Erro de reprodução de vídeo </string>
+
+
+    <string name = "intro_header_1"> Futuro da transmissão </string>
+    <string name = "intro_body_1"> Transmita qualquer vídeo em apenas segundo usando o dispositivo Galaxy. </string>
+    <string name = "intro_header_2"> Suportando todos os vídeos </string>
+    <string name = "intro_body_2"> Suporta vídeos de sites de redes sociais como YouTube, Facebook, Twitter, Instagram, etc. </string>
+    <string name = "intro_header_3"> Transmitir em qualquer lugar </string>
+    <string name = "intro_body_3"> Controle o seu dispositivo remotamente, mesmo se você não estiver no mesmo país ou localidade. </string>
+</resources>

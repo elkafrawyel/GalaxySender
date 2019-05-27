@@ -3,13 +3,43 @@
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <item
-        android:id="@+id/action_settings"
-        android:title="@string/action_settings"
-        app:showAsAction="never"/>
+        android:id="@+id/action_clear_history"
+        android:title="@string/action_clear_history"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_reset_code"
+        android:title="@string/action_reset_code"
+        app:showAsAction="never" />
 
     <item
         android:id="@+id/player_connect"
         android:icon="@drawable/ic_cast_white_24dp"
         android:title="@string/player_video_quality"
         app:showAsAction="always" />
+
+    <item
+        android:id="@+id/player_scan"
+        android:icon="@drawable/ic_camera_alt_white_24dp"
+        android:title="@string/player_scan"
+        app:showAsAction="always" />
+
+
+    <item
+        android:id="@+id/action_language"
+        android:icon="@drawable/ic_camera_alt_white_24dp"
+        android:title="@string/changeLanguage"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_auto_play"
+        android:icon="@drawable/ic_camera_alt_white_24dp"
+        android:title="@string/autPlay"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_info"
+        android:icon="@drawable/ic_camera_alt_white_24dp"
+        android:title="@string/Info"
+        app:showAsAction="never" />
 </menu>

@@ -1,0 +1,91 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources xmlns:tools="http://schemas.android.com/tools">
+    <string name="app_name" tools:ignore="MissingTranslation">GalaxyCast</string>
+    <string name="waiting_for_your_search">Esperando tu busqueda</string>
+    <string name="activation_code">Código de activación</string>
+    <string name="activate">Activar</string>
+    <string name="player_video_quality">Calidad</string>
+    <string name="search_hint">Buscar</string>
+    <string name="playlist">Playlist</string>
+    <string name="addLink">Agregar URL</string>
+    <string name="cancel">Cancelar</string>
+    <string name="play">Jugar</string>
+    <string name="addToPlaylist">Agregar a la lista de reproducción</string>
+    <string name="removeFromPlayList">retirar</string>
+    <string name="supportedLinks">(enlaces soportados)</string>
+    <string name="action_clear_history">Borrar historia</string>
+    <string name="action_reset_code">Restablecer Código</string>
+    <string name="player_scan">Escanear código</string>
+    <string name="changeLanguage">idioma</string>
+    <string name="autPlay">auto-reproducción</string>
+    <string name="licence">Licencia</string>
+    <string name="version">Version de aplicacion</string>
+    <string name="date">Fecha de caducidad</string>
+    <string name="Info">información</string>
+
+
+    <string name="autoPlayList"> PlayList de reproducción automática. </string>
+        
+    <string name="yes"> Sí </string>
+        
+    <string name="no"> No </string>
+        
+    <string name="chooseLanguage"> Choose a Language. </string>
+        
+    <string name="connection_code"> Código de conexión </string>
+        
+    <string name="please_type_code"> ingrese el código de conexión. </string>
+        
+    <string name="empty_code"> Código de conexión vacío </string>
+        
+    <string name="change_code"> ¿Cambiar código? </string>
+        
+    <string name="no_device_available"> ¡No se encontró ningún dispositivo con este código! \\ nEscribe otro código e intenta conectarse. </string>
+        
+    <string name="scan_failed"> Scan Failed </string>
+        
+    <string name="barCodeSetUp"> ¡No se pudo configurar el detector de código de barras! </string>
+        
+    <string name="loadImageFailed"> Error al cargar la imagen </string>
+        
+    <string name="youWantToConnect"> ¿Desea conectarse con </string>
+        
+    <string name="permissionDenied"> Permiso denegado! </string>
+        
+    <string name="connectedTo"> Conectado a </string>
+        
+    <string name="clearHistory"> Historial borrado </string>
+        
+    <string name="disconnectedFrom"> Desconectado de </string>
+        
+    <string name="disconnected"> Desconectar ?? </string>
+        
+    <string name="noConnection"> No hay conexión a Internet. </string>
+        
+    <string name="search_not_working"> La búsqueda no funciona. </string>
+        
+    <string name="empty_Url"> Url vacío no permitido </string>
+        
+    <string name="addUrl"> Agregar URL </string>
+        
+    <string name="addMediaUrl"> Agregar una url de medios para reproducir </string>
+        
+    <string name="videoAddedToPlaylist"> Video agregado a la lista de reproducción. </string>
+        
+    <string name="videoIsAddedToPlaylist"> El video está en tu lista de reproducción. </string>
+        
+    <string name="emptyPlayList"> Su lista de reproducción está vacía. </string>
+        
+    <string name="videoDeleted"> Video eliminado. </string>
+        
+    <string name="chooseQuality"> Elige una calidad. </string>
+        
+    <string name="playerError"> Error de reproducción de video </string>
+
+    <string name = "intro_header_1"> Futuro del casting</string>
+    <string name = "intro_body_1"> Transmita cualquier video en un segundo usando el dispositivo galaxy cast. </string>
+    <string name = "intro_header_2"> Compatible con todos los videos </string>
+    <string name = "intro_body_2"> Admite videos de sitios de redes sociales como YouTube, Facebook, Twitter, Instagram, etc. </string>
+    <string name = "intro_header_3"> Cast Anywhere </string>
+    <string name = "intro_body_3"> Controle su dispositivo de forma remota, incluso si no se encuentra en el mismo país o ubicación. </string>
+</resources>

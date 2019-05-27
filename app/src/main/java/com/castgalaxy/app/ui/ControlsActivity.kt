@@ -63,6 +63,7 @@ class ControlsActivity : AppCompatActivity() {
                 url = intent.getStringExtra("url")
                 tvRef.child(URL).setValue(url)
                 tvRef.child(URL_LIST).setValue(null)
+                tvRef.child(VIDEO_IMAGE).setValue(image)
             } catch (e: java.lang.Exception) {
 
             }

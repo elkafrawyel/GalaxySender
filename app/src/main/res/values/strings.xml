@@ -1,21 +1,62 @@
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name" tools:ignore="MissingTranslation">GalaxyCast</string>
-    <string name="waiting_for_your_search" tools:ignore="MissingTranslation">Waiting for your search</string>
-    <string name="activation_code" tools:ignore="MissingTranslation">Activation Code</string>
-    <string name="activate" tools:ignore="MissingTranslation">Activate</string>
-    <string name="app_id" tools:ignore="MissingTranslation">21B5D797</string>
-    <string name="media_route_menu_title" tools:ignore="MissingTranslation">Play on&#8230;</string>
-    <string name="action_settings" tools:ignore="MissingTranslation">Settings</string>
-    <string name="player_video_quality" tools:ignore="MissingTranslation">Quality</string>
-    <string name="search_hint" tools:ignore="MissingTranslation">Search YouTube</string>
-    <string name="playlist" tools:ignore="MissingTranslation">Playlist</string>
-    <string name="addLink" tools:ignore="MissingTranslation">Add Url</string>
-    <string name="cancel" tools:ignore="MissingTranslation">Cancel</string>
-    <string name="play" tools:ignore="MissingTranslation">Play</string>
-    <string name="addToPlaylist" tools:ignore="MissingTranslation">Add to playlist</string>
-    <string name="removeFromPlayList" tools:ignore="MissingTranslation">Remove</string>
-    <string name="supportedLinks" tools:ignore="MissingTranslation">(supported links)</string>
-    <!--F8625674? ower appId-->
-    <!--B87E66CB? ower appId-->
-    <!--4F8B3483? defaut appId-->
+    <string name="waiting_for_your_search">Waiting for your search</string>
+    <string name="activation_code">Activation Code</string>
+    <string name="activate">Activate</string>
+    <string name="player_video_quality">Quality</string>
+    <string name="search_hint">Search</string>
+    <string name="playlist">Playlist</string>
+    <string name="addLink">Add Url</string>
+    <string name="cancel">Cancel</string>
+    <string name="play">Play</string>
+    <string name="addToPlaylist">Add to playlist</string>
+    <string name="removeFromPlayList">Remove</string>
+    <string name="supportedLinks">(supported links)</string>
+    <string name="action_clear_history">Clear History</string>
+    <string name="action_reset_code">Reset Code</string>
+    <string name="player_scan">Scan Code</string>
+    <string name="changeLanguage">Change Language</string>
+    <string name="autPlay">Auto play</string>
+    <string name="Info">Information</string>
+    <string name="date">Expiration Date </string>
+    <string name="version">Version</string>
+    <string name="licence">Licence</string>
+    <string name="autoPlayList">Auto Play PlayList.</string>
+    <string name="yes">Yes</string>
+    <string name="no">No</string>
+    <string name="chooseLanguage">Choose a Language.</string>
+    <string name="connection_code">Connection Code</string>
+    <string name="please_type_code">please enter connection code.</string>
+    <string name="empty_code">Empty Connection Code</string>
+    <string name="change_code">Change Code?</string>
+    <string name="no_device_available">No device found with this code!\\nType another code and try to connect.</string>
+    <string name="scan_failed">Scan Failed</string>
+    <string name="barCodeSetUp">Could not set up the Barcode detector!</string>
+    <string name="loadImageFailed">Failed to load Image</string>
+    <string name="youWantToConnect">Do you want to connect with</string>
+    <string name="permissionDenied">Permission Denied!</string>
+    <string name="connectedTo">Connected to</string>
+    <string name="clearHistory">History Cleared</string>
+    <string name="disconnectedFrom">Disconnected from</string>
+    <string name="disconnected">Disconnect ??</string>
+    <string name="noConnection">No Internet Connection.</string>
+    <string name="search_not_working">Search is not working.</string>
+    <string name="empty_Url">Empty Url Not Allowed</string>
+    <string name="addUrl">Add Url</string>
+    <string name="addMediaUrl">Add a media url to play</string>
+    <string name="videoAddedToPlaylist">Video added to playlist.</string>
+    <string name="videoIsAddedToPlaylist">Video is in your playlist.</string>
+    <string name="emptyPlayList">Your playlist is empty.</string>
+    <string name="videoDeleted">Video deleted.</string>
+    <string name="chooseQuality">Choose a quality.</string>
+    <string name="playerError">Error Play Video</string>
+
+
+
+    <string name="intro_header_1">Future of casting</string>
+    <string name="intro_body_1">Cast any video in just second using galaxy cast Device.</string>
+    <string name="intro_header_2">Supporting all Videos</string>
+    <string name="intro_body_2">Supports videos from social networking sites like YouTube, Facebook, Twitter, Instagram, etc.</string>
+    <string name="intro_header_3">Cast Anywhere</string>
+    <string name="intro_body_3">Control your device remotely even if you are not in the same country or location.</string>
 </resources>

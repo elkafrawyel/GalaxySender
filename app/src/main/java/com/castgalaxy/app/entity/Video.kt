@@ -11,7 +11,7 @@ data class VideoResponse(
     val description: String?,
     @field:Json(name = "uploader")
     val uploader: String?,
-    @field:Json(name = "urlList")
+    @field:Json(name = "url")
     val url: String?,
     @field:Json(name = "id")
     val id: String?,
@@ -64,7 +64,7 @@ fun VideoResponse.toVideo(): Video? {
 }
 
 data class StreamResponse(
-    @field:Json(name = "urlList")
+    @field:Json(name = "url")
     val url: String?,
     @field:Json(name = "format")
     val format: String?,
@@ -115,8 +115,7 @@ fun StreamResponse.toStream(): Stream? {
         format != null &&
         extension != null
     ) {
-        return Stream(url, format, hasAudio, hasVideo, isHd,extension
-        )
+        return Stream(url, format, hasAudio, hasVideo, isHd,extension)
     }
     return null
 }

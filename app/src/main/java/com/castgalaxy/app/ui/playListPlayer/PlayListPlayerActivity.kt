@@ -346,7 +346,7 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
 
             if (isConnected) {
                 val dialog = AlertDialog.Builder(this@PlayListPlayerActivity)
-                    .setTitle("Disconnect ??")
+                    .setTitle(resources.getString(R.string.disconnected))
                     .setIcon(R.drawable.logo)
                     .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
                     .setNegativeButton(android.R.string.cancel, null)
@@ -357,8 +357,7 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
                     val OkBtn = (dialog1 as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
                     OkBtn.setOnClickListener {
                         tvRef.child(CONNECTED).setValue("0")
-                        toast("Disconnected from $code")
-
+                        toast(resources.getString(R.string.disconnectedFrom) + " " + code)
                         dialog1.cancel()
                     }
 
@@ -394,7 +393,7 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
                     tvRef.removeEventListener(this)
                     finish()
                     tvRef.child(CONNECTED).setValue("1")
-                    toast("Connected to $connectionKey")
+                    toast(resources.getString(R.string.connectedTo) + connectionKey)
                     openControlsActivity(connectionKey)
                     GalaxyCastApplication.getPreferenceHelper().code = connectionKey
                     player?.playWhenReady = false
@@ -403,8 +402,8 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
                     tvRef.removeEventListener(this)
 
                     val dialog = AlertDialog.Builder(this@PlayListPlayerActivity)
-                        .setTitle("Change Code?")
-                        .setMessage("No device found with this code!\nType another code and try to connect.")
+                        .setTitle(resources.getString(R.string.change_code))
+                        .setMessage(resources.getString(R.string.no_device_available))
                         .setIcon(R.drawable.logo)
                         .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
                         .setNegativeButton(android.R.string.cancel, null)
@@ -446,8 +445,8 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
 
         val dialog = AlertDialog.Builder(this@PlayListPlayerActivity)
             .setView(input)
-            .setTitle("Connection Code")
-            .setMessage("please enter connection code.")
+            .setTitle(resources.getString(R.string.connection_code))
+            .setMessage(resources.getString(R.string.please_type_code))
             .setIcon(R.drawable.logo)
             .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
             .setNegativeButton(android.R.string.cancel, null)
@@ -466,7 +465,7 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
                     dialog.cancel()
 
                 } else {
-                    input.error = "Empty Connection Code"
+                    input.error = resources.getString(R.string.empty_code)
                 }
             }
 
@@ -492,7 +491,7 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
         val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
 
         // Set a title for alert dialog
-        builder.setTitle("Choose a quality.")
+        builder.setTitle(resources.getString(R.string.chooseQuality))
 
         // Set the single choice items for alert dialog with initial selection
         builder.setSingleChoiceItems(youtubeLinksArray.map { it.format }.toTypedArray(), -1) { _, which ->
@@ -534,8 +533,12 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
             STATE_BUFFERING -> loadingView.visibility = View.VISIBLE
             STATE_READY -> loadingView.visibility = View.GONE
             STATE_ENDED -> {
-                youtubeLinksArray.clear()
-                playNextVideo(videoId)
+                if (GalaxyCastApplication.getPreferenceHelper().autoPlay) {
+                    youtubeLinksArray.clear()
+                    playNextVideo(videoId)
+                }else{
+                    finish()
+                }
             }
             else -> {
             }
@@ -553,7 +556,7 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
     override fun onPlayerError(error: ExoPlaybackException) {
         Toast.makeText(
             this@PlayListPlayerActivity,
-            "Error Happened ${error.message}",
+            resources.getString(R.string.playerError),
             Toast.LENGTH_LONG
         ).show()
     }

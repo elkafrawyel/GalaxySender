@@ -1,5 +1,6 @@
 package com.castgalaxy.app.ui.search
 
+import android.annotation.SuppressLint
 import com.blankj.utilcode.util.TimeUtils
 import com.bumptech.glide.Glide
 import com.chad.library.adapter.base.BaseQuickAdapter
@@ -15,15 +16,27 @@ class SearchAdapter : BaseQuickAdapter<SearchResult, BaseViewHolder>(R.layout.se
         helper.setText(R.id.title, result.snippet.title)
             .setText(R.id.channelName, result.snippet.channelTitle)
             .setText(
-                R.id.time,
-                TimeUtils.millis2String(result.snippet.publishedAt.value, SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH))
+                R.id.time,getDateCurrentTimeZone(result.snippet.publishedAt.value)
             )
+//            .setText(R.id.length, result.snippet.)
 
         Glide.with(mContext)
             .load(result.snippet.thumbnails.medium.url)
             .into(helper.getView(R.id.image))
     }
 
+
+    private fun getDateCurrentTimeZone(timestamp: Long): String {
+        val calendar = Calendar.getInstance()
+        val tz = TimeZone.getDefault()
+        calendar.timeInMillis = timestamp
+        calendar.add(Calendar.MILLISECOND, tz.getOffset(calendar.timeInMillis))
+        //String myFormat = "EEE, MMM d";
+        @SuppressLint("SimpleDateFormat")
+        val sdf = SimpleDateFormat("yyyy-MM-dd hh:mm a")
+        val currentTimeZone = calendar.time
+        return sdf.format(currentTimeZone)
+    }
 }
 
 //class DiffCallBack : DiffUtil.ItemCallback<SearchResultSnippet>() {

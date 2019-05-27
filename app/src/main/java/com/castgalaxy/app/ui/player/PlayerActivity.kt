@@ -111,6 +111,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     }
 
+
     private fun getYoutubeLink(videoId: String): String {
         return "$BASE_URL/watch?v=$videoId"
 
@@ -174,7 +175,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     private fun onVideoInfoNoConnection() {
         Toast.makeText(
             this@PlayerActivity,
-            "No Internet Connection",
+            resources.getString(R.string.noConnection),
             Toast.LENGTH_LONG
         ).show()
         loadingView.visibility = View.GONE
@@ -231,11 +232,6 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
             tvRef.addValueEventListener(valueEventListener!!)
         }
 
-
-
-
-
-
         val adaptiveTrackSelectionFactory = AdaptiveTrackSelection.Factory()
         player = ExoPlayerFactory.newSimpleInstance(
             this, DefaultRenderersFactory(
@@ -260,10 +256,6 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     override fun onStart() {
         super.onStart()
         hideSystemUI()
-
-        if (player != null) {
-            releasePlayer()
-        }
 
     }
 
@@ -307,6 +299,10 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         Log.d(TAG, "onResume() was called")
         if (player == null && videoUrl != null) {
             playVideo(videoUrl!!)
+        } else {
+            if (player != null) {
+                player?.playWhenReady = true
+            }
         }
         super.onResume()
     }
@@ -314,18 +310,21 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     override fun onPause() {
         super.onPause()
         Log.d(TAG, "onPause() was called")
-        releasePlayer()
+        if (player != null) {
+            player?.playWhenReady = false
+        }
     }
 
     override fun onStop() {
         super.onStop()
-        releasePlayer()
+        if (player != null) {
+            player?.playWhenReady = false
+        }
     }
 
-    override fun onDestroy() {
-        Log.d(TAG, "onDestroy is called")
+    override fun onBackPressed() {
+        super.onBackPressed()
         releasePlayer()
-        super.onDestroy()
     }
 
     override fun onWindowFocusChanged(hasFocus: Boolean) {
@@ -407,7 +406,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
             if (isConnected) {
                 val dialog = AlertDialog.Builder(this@PlayerActivity)
-                    .setTitle("Disconnect ??")
+                    .setTitle(resources.getString(R.string.disconnected))
                     .setIcon(R.drawable.logo)
                     .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
                     .setNegativeButton(android.R.string.cancel, null)
@@ -418,7 +417,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
                     val OkBtn = (dialog1 as AlertDialog).getButton(AlertDialog.BUTTON_POSITIVE)
                     OkBtn.setOnClickListener {
                         tvRef.child(CONNECTED).setValue("0")
-                        toast("Disconnected from $code")
+                        toast(resources.getString(R.string.disconnectedFrom) + " " + code)
 
                         dialog1.cancel()
                     }
@@ -456,7 +455,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
 
         // Set a title for alert dialog
-        builder.setTitle("Choose a quality.")
+        builder.setTitle(resources.getString(R.string.chooseQuality))
 
         // Set the single choice items for alert dialog with initial selection
         builder.setSingleChoiceItems(streamQualities, -1) { _, which ->
@@ -467,7 +466,9 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
             videoUrl = streamUrl
             val lastPosition = player?.currentPosition
             playVideo(videoUrl!!)
-            player?.seekTo(lastPosition!!)
+            if (player != null && lastPosition != null) {
+                player?.seekTo(lastPosition)
+            }
 
             // Dismiss the dialog
             dialog.dismiss()
@@ -488,7 +489,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
         val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
 
         // Set a title for alert dialog
-        builder.setTitle("Choose a quality.")
+        builder.setTitle(resources.getString(R.string.chooseQuality))
 
         // Set the single choice items for alert dialog with initial selection
         builder.setSingleChoiceItems(youtubeLinksArray.map { it.format }.toTypedArray(), -1) { _, which ->
@@ -546,7 +547,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     override fun onPlayerError(error: ExoPlaybackException) {
         Toast.makeText(
             this@PlayerActivity,
-            "Error Happened ${error.message}",
+            resources.getString(R.string.playerError),
             Toast.LENGTH_LONG
         ).show()
     }
@@ -588,8 +589,8 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
         val dialog = AlertDialog.Builder(this@PlayerActivity)
             .setView(input)
-            .setTitle("Connection Code")
-            .setMessage("please enter connection code.")
+            .setTitle(resources.getString(R.string.connection_code))
+            .setMessage(resources.getString(R.string.please_type_code))
             .setIcon(R.drawable.logo)
             .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
             .setNegativeButton(android.R.string.cancel, null)
@@ -608,7 +609,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
                     dialog.cancel()
 
                 } else {
-                    input.error = "Empty Connection Code"
+                    input.error = resources.getString(R.string.empty_code)
                 }
             }
 

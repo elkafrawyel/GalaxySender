@@ -65,11 +65,17 @@ class SearchViewModel : ViewModel() {
                 try {
                     val searchResult = mService?.search()
                         ?.list("snippet")
+//                        ?.setPart("snippet")
+//                        ?.setPart("snippet,contentDetails")
+//                        ?.setPart("statistics")
+//                        ?.setPart("snippet,contentDetails")
+//                        ?.setPart("snippet,contentDetails")
                         ?.setQ(cashedQuery)
                         ?.setType("video")
                         ?.setMaxResults(50)
                         ?.setPageToken(nextPageToken)
                         ?.execute()
+
 
                     nextPageToken = searchResult?.nextPageToken
                     val result = ArrayList(searchResult?.items ?: emptyList())

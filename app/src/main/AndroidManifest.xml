@@ -48,9 +48,6 @@
             android:name=".ui.search.SearchActivity"
             android:screenOrientation="portrait" />
         <activity
-            android:name=".ui.login.CheckActivity"
-            android:screenOrientation="portrait" />
-        <activity
             android:name=".ui.player.PlayerActivity"
             android:screenOrientation="landscape"
             android:theme="@style/Fullscreen" />

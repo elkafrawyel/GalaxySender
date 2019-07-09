@@ -35,11 +35,7 @@ class MyVideosAdapter(
         fun bind(myVideo: MyVideos, listener: (MyVideos,Int) -> Unit) = with(itemView) {
             title.text = myVideo.title
             channelName.text = myVideo.channelName
-            time.text = TimeUtils.millis2String(
-                myVideo.time,
-                SimpleDateFormat("yyyy-mm-dd", Locale.ENGLISH)
-            )
-
+            time.text = myVideo.time
             Glide.with(context)
                 .load(myVideo.image)
                 .into(image)

@@ -1,7 +1,6 @@
 package com.castgalaxy.app.ui.search
 
 import android.Manifest
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.content.Context
 import android.content.Intent
@@ -25,11 +24,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.chad.library.adapter.base.BaseQuickAdapter
 import com.castgalaxy.app.ui.player.PlayerActivity
 import com.castgalaxy.app.R
-import com.castgalaxy.app.entity.SearchQueries
-import com.castgalaxy.app.entity.SearchQueries_
-import com.castgalaxy.app.ui.login.REQUEST_AUTHORIZATION
 import com.castgalaxy.app.utily.ObjectBox.Companion.boxStore
-import com.castgalaxy.app.utily.showGooglePlayServicesAvailabilityErrorDialog
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import kotlinx.android.synthetic.main.activity_search.*
 import androidx.appcompat.app.AlertDialog
@@ -39,24 +34,22 @@ import androidx.core.content.FileProvider
 import com.blankj.utilcode.util.AppUtils
 import com.bumptech.glide.Glide
 import com.castgalaxy.app.GalaxyCastApplication
-import com.castgalaxy.app.entity.MyVideos
-import com.castgalaxy.app.entity.MyVideos_
+import com.castgalaxy.app.entity.*
 import com.castgalaxy.app.ui.ControlsActivity
 import com.castgalaxy.app.ui.PLAY
 import com.castgalaxy.app.ui.URL
+import com.castgalaxy.app.ui.login.ActivationActivity
 import com.castgalaxy.app.ui.playList.PlayListActivity
 import com.castgalaxy.app.ui.player.CONNECTED
 import com.crashlytics.android.Crashlytics
 import com.google.android.gms.vision.Frame
 import com.google.android.gms.vision.barcode.Barcode
 import com.google.android.gms.vision.barcode.BarcodeDetector
-import com.google.api.services.youtube.model.SearchResult
 import com.google.firebase.database.*
 import io.fabric.sdk.android.Fabric
 import java.io.File
 import java.io.FileNotFoundException
 import java.io.IOException
-import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.collections.ArrayList
 
@@ -154,7 +147,7 @@ class SearchActivity : AppCompatActivity() {
     }
 
 
-    private fun showVideoOptions(searchResult: SearchResult) {
+    private fun showVideoOptions(youtubeVideoResponse: YoutubeVideoResponse) {
 
         val videoOptionsView = LayoutInflater.from(this).inflate(R.layout.video_option, null, false)
 
@@ -165,35 +158,35 @@ class SearchActivity : AppCompatActivity() {
 
         dialog.setOnShowListener {
             Glide.with(this@SearchActivity)
-                .load(searchResult.snippet.thumbnails.medium.url)
+                .load(youtubeVideoResponse.imghigh)
                 .into(videoOptionsView.findViewById(R.id.videoOptionImg))
 
             videoOptionsView.findViewById<TextView>(R.id.playVideoTv).setOnClickListener {
                 dialog.dismiss()
-                PlayerActivity.start(this, searchResult.id.videoId, null)
+                PlayerActivity.start(this, youtubeVideoResponse.videoid, null)
             }
 
             videoOptionsView.findViewById<TextView>(R.id.addToPlayListTv).setOnClickListener {
                 dialog.dismiss()
-                addVideoToPlaylist(searchResult)
+                addVideoToPlaylist(youtubeVideoResponse)
             }
         }
 
         dialog.show()
     }
 
-    private fun addVideoToPlaylist(searchResult: SearchResult) {
+    private fun addVideoToPlaylist(youtubeVideoResponse: YoutubeVideoResponse) {
         val videosBox = boxStore.boxFor(MyVideos::class.java)
-        val stored = videosBox.query().equal(MyVideos_.videoId, searchResult.id.videoId).build().find()
+        val stored = videosBox.query().equal(MyVideos_.videoId, youtubeVideoResponse.videoid!!).build().find()
         if (stored.size == 0) {
             videosBox.put(
                 MyVideos(
                     id = 0,
-                    videoId = searchResult.id.videoId,
-                    title = searchResult.snippet.title,
-                    channelName = searchResult.snippet.channelTitle,
-                    time = searchResult.snippet.publishedAt.value,
-                    image = searchResult.snippet.thumbnails.medium.url
+                    videoId = youtubeVideoResponse.videoid,
+                    title = youtubeVideoResponse.videotitle ?: "",
+                    channelName = youtubeVideoResponse.channeltitle ?: "",
+                    time = youtubeVideoResponse.videodate ?: "",
+                    image = youtubeVideoResponse.imghigh!!
                 )
             )
             toast(resources.getString(R.string.videoAddedToPlaylist))
@@ -395,18 +388,18 @@ class SearchActivity : AppCompatActivity() {
                 waitView.visibility = View.GONE
             }
             is SearchViewModel.SearchState.Success -> {
-                adapter.replaceData(state.data)
+                state.data?.let { adapter.replaceData(it) }
                 loadingView.visibility = View.GONE
                 waitMessageTv.visibility = View.GONE
                 waitView.visibility = View.GONE
                 searchRv.visibility = View.VISIBLE
             }
             is SearchViewModel.SearchState.NextPage -> {
-                adapter.addData(state.data)
+                state.data?.let { adapter.addData(it) }
                 adapter.loadMoreComplete()
             }
             is SearchViewModel.SearchState.Ended -> {
-                adapter.addData(state.data)
+                state.data?.let { adapter.addData(it) }
                 adapter.loadMoreEnd()
             }
             SearchViewModel.SearchState.Error.Unknown -> {
@@ -423,17 +416,7 @@ class SearchActivity : AppCompatActivity() {
                 waitMessageTv.visibility = View.GONE
                 Toast.makeText(this, resources.getString(R.string.noConnection), Toast.LENGTH_LONG).show()
             }
-            is SearchViewModel.SearchState.Error.GooglePlay -> {
-                searchRv.visibility = View.GONE
-                showGooglePlayServicesAvailabilityErrorDialog(state.connectionStatusCode)
-            }
-            is SearchViewModel.SearchState.Error.UserRecoverableAuth -> {
-                searchRv.visibility = View.GONE
-                startActivityForResult(
-                    state.intent,
-                    REQUEST_AUTHORIZATION
-                )
-            }
+
         }
     }
 
@@ -578,8 +561,17 @@ class SearchActivity : AppCompatActivity() {
             openAutoPlayDialog()
         } else if (item?.itemId == R.id.action_info) {
             openInfoDialog()
+        } else if (item?.itemId == R.id.action_logOut) {
+            logOut()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun logOut() {
+        GalaxyCastApplication.getPreferenceHelper().clear()
+        val intent = Intent(this@SearchActivity, ActivationActivity::class.java)
+        startActivity(intent)
+        finish()
     }
 
     private fun openInfoDialog() {

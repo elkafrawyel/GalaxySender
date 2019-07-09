@@ -13,6 +13,7 @@ import okhttp3.OkHttpClient
 import okhttp3.logging.HttpLoggingInterceptor
 import retrofit2.Retrofit
 import retrofit2.converter.moshi.MoshiConverterFactory
+import java.util.concurrent.TimeUnit
 
 class GalaxyCastApplication : Application() {
 
@@ -27,14 +28,6 @@ class GalaxyCastApplication : Application() {
     companion object {
         lateinit var instance: GalaxyCastApplication
             private set
-
-        private val SCOPES = arrayOf(YouTubeScopes.YOUTUBE)
-
-        val mCredential: GoogleAccountCredential by lazy {
-            GoogleAccountCredential.usingOAuth2(
-                instance, SCOPES.toCollection(mutableListOf())
-            ).setBackOff(ExponentialBackOff())
-        }
 
         fun retrofitService(): RetrofitService {
             val interceptor = HttpLoggingInterceptor()

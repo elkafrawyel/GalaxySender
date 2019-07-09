@@ -10,6 +10,6 @@ data class MyVideos(
     var videoId:String,
     var title: String,
     var channelName: String,
-    var time: Long,
+    var time: String,
     var image: String
 )

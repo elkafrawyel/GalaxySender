@@ -15,7 +15,9 @@ import com.castgalaxy.app.GalaxyCastApplication
 import com.castgalaxy.app.R
 import com.castgalaxy.app.entity.LoginResponse
 import com.castgalaxy.app.remote.RetrofitService
+import com.castgalaxy.app.ui.search.SearchActivity
 import com.crashlytics.android.Crashlytics
+import com.google.api.services.youtube.YouTube
 import io.fabric.sdk.android.Fabric
 import retrofit2.Call
 import retrofit2.Callback
@@ -71,7 +73,7 @@ class ActivationActivity : AppCompatActivity() {
                                     GalaxyCastApplication.getPreferenceHelper().date = result.expirationDate
                                     GalaxyCastApplication.getPreferenceHelper().licence = result.license
 
-                                    val intent = Intent(this@ActivationActivity, CheckActivity::class.java)
+                                    val intent = Intent(this@ActivationActivity, SearchActivity::class.java)
                                     startActivity(intent)
                                     finish()
                                 }

@@ -4,6 +4,7 @@ import android.content.Context
 import android.preference.PreferenceManager
 
 class PreferencesHelper(context: Context) {
+
     companion object {
         private const val Intro = "intro"
         private const val CODE = "code"
@@ -49,4 +50,10 @@ class PreferencesHelper(context: Context) {
     var language = preference.getString(LANGUAGE, "en")
         set(value) = preference.edit().putString(LANGUAGE, value).apply()
 
+
+    fun clear() {
+        val intro = this.intro
+        preference.edit().clear().apply()
+        this.intro = intro
+    }
 }

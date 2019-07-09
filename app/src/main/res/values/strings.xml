@@ -59,4 +59,5 @@
     <string name="intro_body_2">Supports videos from social networking sites like YouTube, Facebook, Twitter, Instagram, etc.</string>
     <string name="intro_header_3">Cast Anywhere</string>
     <string name="intro_body_3">Control your device remotely even if you are not in the same country or location.</string>
+    <string name="logout">LogOut</string>
 </resources>

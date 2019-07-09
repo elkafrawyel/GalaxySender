@@ -15,10 +15,11 @@
         android:layout_marginTop="8dp"
         android:layout_marginBottom="8dp"
         android:background="#313131"
+        android:scaleType="centerCrop"
         app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintDimensionRatio="16:9"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
 
     <TextView
         android:id="@+id/title"
@@ -44,6 +45,7 @@
         android:layout_marginTop="2dp"
         android:includeFontPadding="false"
         android:textSize="12sp"
+        android:padding="4dp"
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/title"
         tools:text="Jeffrey Grubb" />
@@ -56,6 +58,7 @@
         android:includeFontPadding="false"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
+        android:padding="4dp"
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/channelName"
         tools:text="1 year ago . 178k views" />
@@ -66,11 +69,29 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="8dp"
         android:includeFontPadding="false"
+        android:layout_marginBottom="8dp"
         android:textColor="@android:color/darker_gray"
         android:textSize="12sp"
+        android:padding="4dp"
         app:layout_constraintStart_toStartOf="@id/title"
         app:layout_constraintTop_toBottomOf="@id/time"
+        app:layout_constraintBottom_toBottomOf="parent"
         tools:text="1 hour,33 mins" />
 
+    <TextView
+        android:id="@+id/quality"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="hd"
+        android:layout_marginStart="8dp"
+        android:paddingStart="@dimen/dp_4"
+        android:paddingEnd="@dimen/dp_4"
+        android:textSize="@dimen/sp_14"
+        android:gravity="center"
+        android:background="@drawable/rounded_quality"
+        android:textColor="@android:color/white"
+        app:layout_constraintStart_toEndOf="@id/length"
+        app:layout_constraintTop_toTopOf="@id/length"
+        app:layout_constraintBottom_toBottomOf="@id/length"/>
 
 </androidx.constraintlayout.widget.ConstraintLayout>

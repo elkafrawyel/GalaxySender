@@ -7,6 +7,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import com.castgalaxy.app.GalaxyCastApplication
+import com.castgalaxy.app.entity.YoutubeVideoResponse
 import com.google.api.client.extensions.android.http.AndroidHttp
 import com.google.api.client.googleapis.extensions.android.gms.auth.GooglePlayServicesAvailabilityIOException
 import com.google.api.client.googleapis.extensions.android.gms.auth.UserRecoverableAuthIOException
@@ -50,58 +51,21 @@ class SearchViewModel : ViewModel() {
         } else {
             searchJob = scope.launch {
                 if (!nextPage) withContext(Dispatchers.Main) {
-                    searchMutableLiveData.value =
-                        SearchState.Loading
+                    searchMutableLiveData.value = SearchState.Loading
                 }
-                val transport = AndroidHttp.newCompatibleTransport()
-                val jsonFactory = JacksonFactory.getDefaultInstance()
-                val mService = com.google.api.services.youtube.YouTube.Builder(
-                    transport,
-                    jsonFactory,
-                    GalaxyCastApplication.mCredential
-                ).setApplicationName("Galaxy Cast")
-                    .build()
+                val result = GalaxyCastApplication.retrofitService()
+                    .search(cashedQuery, nextPageToken, GalaxyCastApplication.getPreferenceHelper().active_code)
+                    .await()
 
-                try {
-                    val searchResult = mService?.search()
-                        ?.list("snippet")
-//                        ?.setPart("snippet")
-//                        ?.setPart("snippet,contentDetails")
-//                        ?.setPart("statistics")
-//                        ?.setPart("snippet,contentDetails")
-//                        ?.setPart("snippet,contentDetails")
-                        ?.setQ(cashedQuery)
-                        ?.setType("video")
-                        ?.setMaxResults(50)
-                        ?.setPageToken(nextPageToken)
-                        ?.execute()
-
-
-                    nextPageToken = searchResult?.nextPageToken
-                    val result = ArrayList(searchResult?.items ?: emptyList())
+                if (result.status == "success") {
+                    nextPageToken = result.nextpagetoken
                     withContext(Dispatchers.Main) {
                         if (nextPage) {
                             searchMutableLiveData.value =
-                                SearchState.NextPage(result)
+                                SearchState.NextPage(result.data)
                         } else {
                             searchMutableLiveData.value =
-                                SearchState.Success(result)
-                        }
-                    }
-                } catch (e: Exception) {
-                    e.printStackTrace()
-                    when (e) {
-                        is GooglePlayServicesAvailabilityIOException -> withContext(Dispatchers.Main) {
-                            searchMutableLiveData.value =
-                                SearchState.Error.GooglePlay(e.connectionStatusCode)
-                        }
-                        is UserRecoverableAuthIOException -> withContext(Dispatchers.Main) {
-                            searchMutableLiveData.value =
-                                SearchState.Error.UserRecoverableAuth(e.intent)
-                        }
-                        else -> withContext(Dispatchers.Main) {
-                            searchMutableLiveData.value =
-                                SearchState.Error.Unknown
+                                SearchState.Success(result.data)
                         }
                     }
                 }
@@ -123,14 +87,12 @@ class SearchViewModel : ViewModel() {
 
     sealed class SearchState {
         object Loading : SearchState()
-        data class Success(val data: List<SearchResult>) : SearchState()
-        data class NextPage(val data: List<SearchResult>) : SearchState()
-        data class Ended(val data: List<SearchResult>) : SearchState()
+        data class Success(val data: List<YoutubeVideoResponse?>?) : SearchState()
+        data class NextPage(val data: List<YoutubeVideoResponse?>?) : SearchState()
+        data class Ended(val data: List<YoutubeVideoResponse?>?) : SearchState()
         sealed class Error : SearchState() {
             object Unknown : Error()
             object Offline : Error()
-            data class GooglePlay(val connectionStatusCode: Int) : Error()
-            data class UserRecoverableAuth(val intent: Intent) : Error()
         }
     }
 

@@ -42,4 +42,10 @@
         android:icon="@drawable/ic_camera_alt_white_24dp"
         android:title="@string/Info"
         app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_logOut"
+        android:icon="@drawable/ic_camera_alt_white_24dp"
+        android:title="@string/logout"
+        app:showAsAction="never" />
 </menu>

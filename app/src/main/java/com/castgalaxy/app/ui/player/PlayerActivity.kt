@@ -545,11 +545,11 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
     }
 
     override fun onPlayerError(error: ExoPlaybackException) {
-        Toast.makeText(
-            this@PlayerActivity,
-            resources.getString(R.string.playerError),
-            Toast.LENGTH_LONG
-        ).show()
+//        Toast.makeText(
+//            this@PlayerActivity,
+//            resources.getString(R.string.playerError),
+//            Toast.LENGTH_LONG
+//        ).show()
     }
 
     override fun onPositionDiscontinuity(reason: Int) {
@@ -645,7 +645,7 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
                     val dialog = AlertDialog.Builder(this@PlayerActivity)
                         .setTitle("Change Code?")
-                        .setMessage("No device found with this code!\nType another code and try to connect.")
+                        .setMessage("No device found with this code! Type another code and try to connect.")
                         .setIcon(R.drawable.logo)
                         .setPositiveButton(android.R.string.ok, null) //Set to null. We override the onclick
                         .setNegativeButton(android.R.string.cancel, null)
@@ -676,11 +676,10 @@ class PlayerActivity : AppCompatActivity(), VideoListener, Player.EventListener 
 
     }
 
-
     private fun openControlsActivity(connectionKey: String) {
         val intent = Intent(this@PlayerActivity, ControlsActivity::class.java)
         intent.putExtra("code", connectionKey)
-        intent.putExtra("url", videoUrl)
+        intent.putExtra("url", getYoutubeLink(videoId!!))
         if (videoId != null) {
             intent.putExtra("image", getVideoImage(videoId!!))
         } else {

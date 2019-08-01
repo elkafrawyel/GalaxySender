@@ -554,11 +554,11 @@ class PlayListPlayerActivity : AppCompatActivity(), EventListener, VideoListener
     }
 
     override fun onPlayerError(error: ExoPlaybackException) {
-        Toast.makeText(
-            this@PlayListPlayerActivity,
-            resources.getString(R.string.playerError),
-            Toast.LENGTH_LONG
-        ).show()
+//        Toast.makeText(
+//            this@PlayListPlayerActivity,
+//            resources.getString(R.string.playerError),
+//            Toast.LENGTH_LONG
+//        ).show()
     }
 
     override fun onPositionDiscontinuity(reason: Int) {

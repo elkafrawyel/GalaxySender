@@ -24,7 +24,6 @@
         android:title="@string/player_scan"
         app:showAsAction="always" />
 
-
     <item
         android:id="@+id/action_language"
         android:icon="@drawable/ic_camera_alt_white_24dp"
@@ -35,6 +34,12 @@
         android:id="@+id/action_auto_play"
         android:icon="@drawable/ic_camera_alt_white_24dp"
         android:title="@string/autPlay"
+        app:showAsAction="never" />
+
+    <item
+        android:id="@+id/action_family"
+        android:icon="@drawable/ic_camera_alt_white_24dp"
+        android:title="@string/family"
         app:showAsAction="never" />
 
     <item

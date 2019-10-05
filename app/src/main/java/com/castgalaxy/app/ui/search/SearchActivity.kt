@@ -559,12 +559,47 @@ class SearchActivity : AppCompatActivity() {
             openChangeLanguage()
         } else if (item?.itemId == R.id.action_auto_play) {
             openAutoPlayDialog()
+        } else if (item?.itemId == R.id.action_family) {
+            openFamilyDialog()
         } else if (item?.itemId == R.id.action_info) {
             openInfoDialog()
         } else if (item?.itemId == R.id.action_logOut) {
             logOut()
         }
         return super.onOptionsItemSelected(item)
+    }
+
+    private fun openFamilyDialog() {
+        // Late initialize an alert dialog object
+        lateinit var dialog: AlertDialog
+
+        // Initialize a new instance of alert dialog builder object
+        val builder = AlertDialog.Builder(this, R.style.MyDialogTheme)
+
+        // Set a title for alert dialog
+        builder.setTitle(resources.getString(R.string.family))
+        val options = ArrayList<String>()
+        options.add(resources.getString(R.string.yes))
+        options.add(resources.getString(R.string.no))
+
+        var index = 0
+        if (!GalaxyCastApplication.getPreferenceHelper().family) {
+            index = 1
+        }
+
+        // Set the single choice items for alert dialog with initial selection
+        builder.setSingleChoiceItems(options.toTypedArray(), index) { _, which ->
+            // Get the dialog selected item
+            GalaxyCastApplication.getPreferenceHelper().family = which == 0
+            // Dismiss the dialog
+            dialog.dismiss()
+        }
+
+        // Initialize the AlertDialog using builder object
+        dialog = builder.create()
+
+        // Finally, display the alert dialog
+        dialog.show()
     }
 
     private fun logOut() {

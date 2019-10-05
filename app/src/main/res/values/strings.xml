@@ -60,4 +60,5 @@
     <string name="intro_header_3">Cast Anywhere</string>
     <string name="intro_body_3">Control your device remotely even if you are not in the same country or location.</string>
     <string name="logout">LogOut</string>
+    <string name="family">Family</string>
 </resources>

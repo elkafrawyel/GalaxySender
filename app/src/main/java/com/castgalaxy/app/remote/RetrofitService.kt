@@ -18,12 +18,22 @@ interface RetrofitService {
     fun login(
         @Query("activecode") code: String,
         @Query("uid") uId: String,
-        @Query("versioncode") version :String): Call<LoginResponse>
+        @Query("versioncode") version: String
+    ): Call<LoginResponse>
 
     @GET("youtubesearch.php")
     fun search(
         @Query("search") query: String,
         @Query("nxtpagetoken") nextPageToken: String?,
-        @Query("activecode") activeCode :String): Deferred<SearchResponse>
+        @Query("activecode") activeCode: String
+    ): Deferred<SearchResponse>
+
+    @GET("youtubesearch.php")
+    fun searchFamily(
+        @Query("search") query: String,
+        @Query("nxtpagetoken") nextPageToken: String?,
+        @Query("activecode") activeCode: String,
+        @Query("family") family: String
+    ): Deferred<SearchResponse>
 
 }

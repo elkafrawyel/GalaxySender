@@ -16,6 +16,7 @@ class PreferencesHelper(context: Context) {
         private const val AUTO_PLAY = "auto_play"
         private const val DATE = "date"
         private const val LICENCE = "licence"
+        private const val FAMILY = "family"
     }
 
     private val preference = PreferenceManager.getDefaultSharedPreferences(context)
@@ -49,6 +50,9 @@ class PreferencesHelper(context: Context) {
 
     var language = preference.getString(LANGUAGE, "en")
         set(value) = preference.edit().putString(LANGUAGE, value).apply()
+
+    var family = preference.getBoolean(FAMILY, false)
+        set(value) = preference.edit().putBoolean(FAMILY, value).apply()
 
 
     fun clear() {

@@ -53,22 +53,48 @@ class SearchViewModel : ViewModel() {
                 if (!nextPage) withContext(Dispatchers.Main) {
                     searchMutableLiveData.value = SearchState.Loading
                 }
-                val result = GalaxyCastApplication.retrofitService()
-                    .search(cashedQuery, nextPageToken, GalaxyCastApplication.getPreferenceHelper().active_code)
-                    .await()
 
-                if (result.status == "success") {
-                    nextPageToken = result.nextpagetoken
-                    withContext(Dispatchers.Main) {
-                        if (nextPage) {
-                            searchMutableLiveData.value =
-                                SearchState.NextPage(result.data)
-                        } else {
-                            searchMutableLiveData.value =
-                                SearchState.Success(result.data)
+                if (GalaxyCastApplication.getPreferenceHelper().family) {
+                    val result = GalaxyCastApplication.retrofitService()
+                        .searchFamily(
+                            cashedQuery,
+                            nextPageToken,
+                            GalaxyCastApplication.getPreferenceHelper().active_code,
+                            "on"
+                        )
+                        .await()
+
+                    if (result.status == "success") {
+                        nextPageToken = result.nextpagetoken
+                        withContext(Dispatchers.Main) {
+                            if (nextPage) {
+                                searchMutableLiveData.value =
+                                    SearchState.NextPage(result.data)
+                            } else {
+                                searchMutableLiveData.value =
+                                    SearchState.Success(result.data)
+                            }
+                        }
+                    }
+                } else {
+                    val result = GalaxyCastApplication.retrofitService()
+                        .search(cashedQuery, nextPageToken, GalaxyCastApplication.getPreferenceHelper().active_code)
+                        .await()
+
+                    if (result.status == "success") {
+                        nextPageToken = result.nextpagetoken
+                        withContext(Dispatchers.Main) {
+                            if (nextPage) {
+                                searchMutableLiveData.value =
+                                    SearchState.NextPage(result.data)
+                            } else {
+                                searchMutableLiveData.value =
+                                    SearchState.Success(result.data)
+                            }
                         }
                     }
                 }
+
             }
         }
     }
